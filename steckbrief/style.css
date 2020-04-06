@@ -1,0 +1,19 @@
+ul {
+    list-style: none;
+}
+
+ul, ul li {
+    width: 100%;
+}
+
+ul li {
+    display: flex;
+}
+
+ul li a {
+    flex: 0 0 200px;
+}
+
+ul li span {
+    flex: 0 0 calc(100% - 200px);
+}
