@@ -19,6 +19,6 @@ td:first-child {
     width: 200px;
 }
 
-a {
-    width: 100%;
+.link {
+    display: block;
 }
