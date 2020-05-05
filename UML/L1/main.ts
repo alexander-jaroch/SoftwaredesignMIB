@@ -1,4 +1,5 @@
 namespace UML1 {
+
     let eingabe: string;
     eingabe = prompt("Eingabe");
 
@@ -24,4 +25,5 @@ namespace UML1 {
     console.log(tmpAusgabe1);
     console.log(tmpAusgabe2);
     console.log(tmpAusgabe3);
+
 }
