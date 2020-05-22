@@ -52,7 +52,7 @@ namespace circle {
     const fadeCol1: string = "rgba(128, 128, 255, 0)"; // second color of fading stroke
 
     // Context Settings
-    context.lineWidth = 2 * Math.PI * 256 / values.length * 0.25;
+    context.lineWidth = 2 * Math.PI * radius / values.length * 0.25;
     context.lineCap = "round";
 
     requestAnimationFrame(animate);
