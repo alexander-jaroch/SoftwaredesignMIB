@@ -36,7 +36,7 @@ var E06;
         amplitudeColorLow: new E06.RGBA(255, 0, 102, 0.5),
         amplitudeColorHigh: new E06.RGBA(255, 179, 209, 0.5)
     };
-    const analyser = new E06.RadialAnalyser(audio, 512, canvas, style);
+    const analyser = new E06.RadialAnalyser(audio, 2048, canvas, style);
     requestAnimationFrame(animate);
     function animate() {
         analyser.analyse();

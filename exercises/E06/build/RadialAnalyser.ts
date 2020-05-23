@@ -2,7 +2,7 @@ namespace E06 {
     export class RadialAnalyser extends Analyser {
         private _style: RadialAnalyserStyle;
 
-        public constructor(audioElement: HTMLAudioElement, fftSize: (1 | 2 | 4 | 8 | 16 | 32 | 64 | 128 | 256 | 512 | 1024 | 2048), canvasElement: HTMLCanvasElement, style: RadialAnalyserStyle) {
+        public constructor(audioElement: HTMLAudioElement, fftSize: PowerOfTwo, canvasElement: HTMLCanvasElement, style: RadialAnalyserStyle) {
             super(audioElement, fftSize, canvasElement);
             this._style = style;
         }

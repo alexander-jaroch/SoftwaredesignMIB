@@ -9,7 +9,7 @@ namespace E06 {
         protected _canvasContext: CanvasRenderingContext2D;
         protected _canvasCenter: Vector;
 
-        protected constructor(audioElement: HTMLAudioElement, fftSize: (1 | 2 | 4 | 8 | 16 | 32 | 64 | 128 | 256 | 512 | 1024 | 2048), canvasElement: HTMLCanvasElement) {
+        protected constructor(audioElement: HTMLAudioElement, fftSize: PowerOfTwo, canvasElement: HTMLCanvasElement) {
             this._audioElement = audioElement;
             this._audioContext = new AudioContext();
             this._mediaSource = this._audioContext.createMediaElementSource(this._audioElement);
