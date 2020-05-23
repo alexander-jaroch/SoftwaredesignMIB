@@ -1,10 +1,25 @@
 namespace E06 {
-    export class RadialAnalyser extends Analyser {
-        private _style: RadialAnalyserStyle;
+    class RadialVisualiserStyle extends VisualiserStyle {
+        public test: number = 77;
 
-        public constructor(frequencies: Uint8Array, canvasElement: HTMLCanvasElement, style: RadialAnalyserStyle) {
+        public constructor(styleOptions: VisualiserStyleOptions) {
+            super(styleOptions);
+            this.init(styleOptions);
+        }
+    }
+
+    export class RadialVisualiser extends Visualiser {
+        protected _style: RadialVisualiserStyle;
+        private _innerRadius: number;
+
+        public constructor(frequencies: Uint8Array, canvasElement: HTMLCanvasElement, styleOptions: VisualiserStyleOptions) {
             super(frequencies, canvasElement);
-            this._style = style;
+            this._style = new RadialVisualiserStyle(styleOptions);
+            this.resize();
+        }
+
+        public get style(): RadialVisualiserStyle {
+            return this._style;
         }
 
         public beautify(): void {
@@ -15,12 +30,18 @@ namespace E06 {
             }
         }
 
+        public resize(): void {
+            this._innerRadius = Math.min(this._canvasCenter.x, this._canvasCenter.y) - this._style.maxAmplitudeHeight - this._style.shadowHeight - this._style.padding;
+            this._canvasContext.lineWidth = 2 * Math.PI * this._innerRadius / this._frequencies.length * this._style.amplitudeWidth;
+            this._canvasContext.lineCap = "round";
+        }
+
         protected renderOne(i: number, r: number): void {
             const α: number = 2 * Math.PI / this._frequencies.length * i;
             const dir: Vector = new Vector(Math.cos(α), Math.sin(α));
 
             this._canvasContext.beginPath();
-            const offset: Vector = this._canvasCenter.add(dir.scale(this._style.innerRadius));
+            const offset: Vector = this._canvasCenter.add(dir.scale(this._innerRadius));
             this._canvasContext.moveTo(offset.x, offset.y);
 
             const amplitude: Vector = offset.add(dir.scale(r / 255 * this._style.maxAmplitudeHeight));
