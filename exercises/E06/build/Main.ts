@@ -1,12 +1,9 @@
 namespace E06 {
-    const files: Array<string> = ["01.wav", "02.wav", "03.wav"];
-
     document.body.style.backgroundColor = "rgba(0, 0, 0, 0.9)";
     document.body.style.overflow = "hidden";
     document.body.style.margin = "0px";
 
     const audio: HTMLAudioElement = document.createElement("audio");
-    audio.src = files[0];
     document.body.appendChild(audio);
     audio.controls = true;
     audio.crossOrigin = "";
@@ -14,16 +11,22 @@ namespace E06 {
     audio.style.position = "fixed";
     audio.style.top = "25px";
 
-    files.forEach(function (file: string): void {
-        const anchor: HTMLAnchorElement = document.createElement("a");
-        anchor.appendChild(document.createTextNode(file));
-        anchor.addEventListener("click", function (): void {
-            audio.src = file;
-            audio.play();
-        });
-        anchor.style.padding = "10px";
-        anchor.style.color = "rgb(255, 255, 255)";
-        document.body.appendChild(anchor);
+    const fftSize: fftSize = 512;
+    const audioContext: AudioContext = new AudioContext();
+    const mediaSource: MediaElementAudioSourceNode = audioContext.createMediaElementSource(audio);
+    const analyserNode: AnalyserNode = audioContext.createAnalyser();
+    mediaSource.connect(analyserNode);
+    analyserNode.connect(audioContext.destination);
+    analyserNode.fftSize = fftSize;
+
+    const input: HTMLInputElement = document.createElement("input");
+    input.type = "file";
+    input.style.color = "rgba(255, 255, 255, 1)";
+    document.body.appendChild(input);
+    input.addEventListener("change", function (): void {
+        if (input.files[0]) {
+            audio.src = URL.createObjectURL(input.files[0]);
+        }
     });
 
     const canvas: HTMLCanvasElement = document.createElement("canvas");
@@ -40,10 +43,12 @@ namespace E06 {
         amplitudeColorLow: new RGBA(255, 0, 102, 0.5),
         amplitudeColorHigh: new RGBA(255, 179, 209, 0.5)
     };
-    const analyser: RadialAnalyser = new RadialAnalyser(audio, 512, canvas, style);
-    requestAnimationFrame(animate);    
+    const values: Uint8Array = new Uint8Array(analyserNode.frequencyBinCount);
+    const analyser: RadialAnalyser = new RadialAnalyser(values, canvas, style);
+    requestAnimationFrame(animate);
     function animate(): void {
-        analyser.analyse();
+        analyserNode.getByteFrequencyData(values);
+        analyser.frequencies = values;
         analyser.beautify();
         analyser.clearCanvas();
         analyser.renderAll();

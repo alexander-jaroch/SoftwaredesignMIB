@@ -1,27 +1,30 @@
 "use strict";
 var E06;
 (function (E06) {
-    const files = ["01.wav", "02.wav", "03.wav"];
     document.body.style.backgroundColor = "rgba(0, 0, 0, 0.9)";
     document.body.style.overflow = "hidden";
     document.body.style.margin = "0px";
     const audio = document.createElement("audio");
-    audio.src = files[0];
     document.body.appendChild(audio);
     audio.controls = true;
     audio.crossOrigin = "";
     audio.style.position = "fixed";
     audio.style.top = "25px";
-    files.forEach(function (file) {
-        const anchor = document.createElement("a");
-        anchor.appendChild(document.createTextNode(file));
-        anchor.addEventListener("click", function () {
-            audio.src = file;
-            audio.play();
-        });
-        anchor.style.padding = "10px";
-        anchor.style.color = "rgb(255, 255, 255)";
-        document.body.appendChild(anchor);
+    const fftSize = 512;
+    const audioContext = new AudioContext();
+    const mediaSource = audioContext.createMediaElementSource(audio);
+    const analyserNode = audioContext.createAnalyser();
+    mediaSource.connect(analyserNode);
+    analyserNode.connect(audioContext.destination);
+    analyserNode.fftSize = fftSize;
+    const input = document.createElement("input");
+    input.type = "file";
+    input.style.color = "rgba(255, 255, 255, 1)";
+    document.body.appendChild(input);
+    input.addEventListener("change", function () {
+        if (input.files[0]) {
+            audio.src = URL.createObjectURL(input.files[0]);
+        }
     });
     const canvas = document.createElement("canvas");
     canvas.width = innerWidth;
@@ -36,10 +39,12 @@ var E06;
         amplitudeColorLow: new E06.RGBA(255, 0, 102, 0.5),
         amplitudeColorHigh: new E06.RGBA(255, 179, 209, 0.5)
     };
-    const analyser = new E06.RadialAnalyser(audio, 2048, canvas, style);
+    const values = new Uint8Array(analyserNode.frequencyBinCount);
+    const analyser = new E06.RadialAnalyser(values, canvas, style);
     requestAnimationFrame(animate);
     function animate() {
-        analyser.analyse();
+        analyserNode.getByteFrequencyData(values);
+        analyser.frequencies = values;
         analyser.beautify();
         analyser.clearCanvas();
         analyser.renderAll();

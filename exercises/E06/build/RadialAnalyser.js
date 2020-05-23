@@ -2,8 +2,8 @@
 var E06;
 (function (E06) {
     class RadialAnalyser extends E06.Analyser {
-        constructor(audioElement, fftSize, canvasElement, style) {
-            super(audioElement, fftSize, canvasElement);
+        constructor(frequencies, canvasElement, style) {
+            super(frequencies, canvasElement);
             this._style = style;
         }
         beautify() {
