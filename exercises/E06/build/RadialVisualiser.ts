@@ -1,6 +1,6 @@
 namespace E06 {
     class RadialVisualiserStyle extends VisualiserStyle {
-        public test: number = 77;
+        public radial: number = 314;
 
         public constructor(styleOptions: VisualiserStyleOptions) {
             super(styleOptions);

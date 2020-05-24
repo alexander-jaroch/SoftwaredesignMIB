@@ -40,15 +40,27 @@ namespace E06 {
     canvas.height = innerHeight;
     document.body.appendChild(canvas);
 
-    const style: VisualiserStyleOptions = {
+    const radialStyle: VisualiserStyleOptions = {
         shadowColorFrom: new RGBA(255, 0, 102, 0.2),
         shadowColorTo: new RGBA(255, 0, 102, 0),
         amplitudeColorLow: new RGBA(255, 0, 102, 0.5),
         amplitudeColorHigh: new RGBA(255, 179, 209, 0.5)
     };
 
+    const barStyle: VisualiserStyleOptions = {
+        maxAmplitudeHeight: 100,
+        amplitudeWidth: 0.75,
+        shadowHeight: 50,
+        shadowColorFrom: new RGBA(0, 255, 255, 0.2),
+        shadowColorTo: new RGBA(255, 255, 0, 0),
+        amplitudeColorLow: new RGBA(0, 255, 255, 0.5),
+        amplitudeColorHigh: new RGBA(255, 255, 0, 0.5),
+        padding: 0
+    };
+
+    let visualiserType: string = "radial";
     const values: Uint8Array = new Uint8Array(fftSize / 2);
-    const visualiser: RadialVisualiser = new RadialVisualiser(values, canvas, style);
+    let visualiser: Visualiser = new RadialVisualiser(values, canvas, radialStyle);
     requestAnimationFrame(animate);
     function animate(): void {
         if (analyserNode) analyserNode.getByteFrequencyData(values);
@@ -64,5 +76,15 @@ namespace E06 {
         canvas.height = innerHeight;
         visualiser.recenter();
         visualiser.resize();
+    });
+
+    canvas.addEventListener("click", function (): void {
+        if (visualiserType === "radial") {
+            visualiserType = "bar";
+            visualiser = new BarVisualiser(values, canvas, barStyle);
+        } else if (visualiserType === "bar") {
+            visualiserType = "radial";
+            visualiser = new RadialVisualiser(values, canvas, radialStyle);
+        }
     });
 }

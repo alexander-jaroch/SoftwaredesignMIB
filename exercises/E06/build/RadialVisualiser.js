@@ -4,7 +4,7 @@ var E06;
     class RadialVisualiserStyle extends E06.VisualiserStyle {
         constructor(styleOptions) {
             super(styleOptions);
-            this.test = 77;
+            this.radial = 314;
             this.init(styleOptions);
         }
     }

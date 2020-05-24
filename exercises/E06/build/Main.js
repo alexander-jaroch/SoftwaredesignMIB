@@ -35,14 +35,25 @@ var E06;
     canvas.width = innerWidth;
     canvas.height = innerHeight;
     document.body.appendChild(canvas);
-    const style = {
+    const radialStyle = {
         shadowColorFrom: new E06.RGBA(255, 0, 102, 0.2),
         shadowColorTo: new E06.RGBA(255, 0, 102, 0),
         amplitudeColorLow: new E06.RGBA(255, 0, 102, 0.5),
         amplitudeColorHigh: new E06.RGBA(255, 179, 209, 0.5)
     };
+    const barStyle = {
+        maxAmplitudeHeight: 100,
+        amplitudeWidth: 0.75,
+        shadowHeight: 50,
+        shadowColorFrom: new E06.RGBA(0, 255, 255, 0.2),
+        shadowColorTo: new E06.RGBA(255, 255, 0, 0),
+        amplitudeColorLow: new E06.RGBA(0, 255, 255, 0.5),
+        amplitudeColorHigh: new E06.RGBA(255, 255, 0, 0.5),
+        padding: 0
+    };
+    let visualiserType = "radial";
     const values = new Uint8Array(fftSize / 2);
-    const visualiser = new E06.RadialVisualiser(values, canvas, style);
+    let visualiser = new E06.RadialVisualiser(values, canvas, radialStyle);
     requestAnimationFrame(animate);
     function animate() {
         if (analyserNode)
@@ -58,6 +69,16 @@ var E06;
         canvas.height = innerHeight;
         visualiser.recenter();
         visualiser.resize();
+    });
+    canvas.addEventListener("click", function () {
+        if (visualiserType === "radial") {
+            visualiserType = "bar";
+            visualiser = new E06.BarVisualiser(values, canvas, barStyle);
+        }
+        else if (visualiserType === "bar") {
+            visualiserType = "radial";
+            visualiser = new E06.RadialVisualiser(values, canvas, radialStyle);
+        }
     });
 })(E06 || (E06 = {}));
 //# sourceMappingURL=Main.js.map
