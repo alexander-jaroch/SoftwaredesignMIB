@@ -1,17 +1,10 @@
 "use strict";
 var E06;
 (function (E06) {
-    class BarVisualiserStyle extends E06.VisualiserStyle {
-        constructor(styleOptions) {
-            super(styleOptions);
-            this.bar = 111;
-            this.init(styleOptions);
-        }
-    }
     class BarVisualiser extends E06.Visualiser {
         constructor(frequencies, canvasElement, styleOptions) {
             super(frequencies, canvasElement);
-            this._style = new BarVisualiserStyle(styleOptions);
+            this._style = new E06.VisualiserStyle(styleOptions);
             this.resize();
         }
         get style() {

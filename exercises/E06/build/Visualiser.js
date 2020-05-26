@@ -11,14 +11,7 @@ var E06;
             this.shadowColorFrom = new E06.RGBA(255, 255, 255, 0.25);
             this.shadowColorTo = new E06.RGBA(255, 255, 255, 0);
             this.shadowHeight = 25;
-            this.init(options);
-        }
-        init(options) {
-            for (let option in options) {
-                if (this[option]) {
-                    this[option] = options[option];
-                }
-            }
+            Object.assign(this, options);
         }
     }
     E06.VisualiserStyle = VisualiserStyle;

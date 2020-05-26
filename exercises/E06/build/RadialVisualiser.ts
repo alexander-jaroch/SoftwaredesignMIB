@@ -1,24 +1,15 @@
 namespace E06 {
-    class RadialVisualiserStyle extends VisualiserStyle {
-        public radial: number = 314;
-
-        public constructor(styleOptions: VisualiserStyleOptions) {
-            super(styleOptions);
-            this.init(styleOptions);
-        }
-    }
-
     export class RadialVisualiser extends Visualiser {
-        protected _style: RadialVisualiserStyle;
+        protected _style: VisualiserStyle;
         private _innerRadius: number;
 
-        public constructor(frequencies: Uint8Array, canvasElement: HTMLCanvasElement, styleOptions: VisualiserStyleOptions) {
+        public constructor(frequencies: Uint8Array, canvasElement: HTMLCanvasElement, styleOptions: Partial<VisualiserStyle>) {
             super(frequencies, canvasElement);
-            this._style = new RadialVisualiserStyle(styleOptions);
+            this._style = new VisualiserStyle(styleOptions);
             this.resize();
         }
 
-        public get style(): RadialVisualiserStyle {
+        public get style(): VisualiserStyle {
             return this._style;
         }
 

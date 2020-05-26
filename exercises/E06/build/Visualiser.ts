@@ -1,10 +1,5 @@
 namespace E06 {
-    export interface VisualiserStyleOptions {
-        [option: string]: number | RGBA;
-    }
-
     export class VisualiserStyle {
-        [option: string]: number | RGBA | Function;
         public amplitudeColorHigh: RGBA = new RGBA(255, 255, 255, 0.5);
         public amplitudeColorLow: RGBA = new RGBA(0, 0, 0, 0.5);
         public amplitudeWidth: number = 0.5;
@@ -14,16 +9,8 @@ namespace E06 {
         public shadowColorTo: RGBA = new RGBA(255, 255, 255, 0);
         public shadowHeight: number = 25;
 
-        protected constructor(options: VisualiserStyleOptions) {
-            this.init(options);
-        }
-
-        protected init(options: VisualiserStyleOptions): void {
-            for (let option in options) {
-                if (this[option]) {
-                    this[option] = options[option];
-                }
-            }
+        public constructor(options: Partial<VisualiserStyle>) {
+            Object.assign<VisualiserStyle, Partial<VisualiserStyle>>(this, options);
         }
     }
 

@@ -1,23 +1,14 @@
 namespace E06 {
-    class BarVisualiserStyle extends VisualiserStyle {
-        public bar: number = 111;
-
-        public constructor(styleOptions: VisualiserStyleOptions) {
-            super(styleOptions);
-            this.init(styleOptions);
-        }
-    }
-
     export class BarVisualiser extends Visualiser {
-        protected _style: BarVisualiserStyle;
+        protected _style: VisualiserStyle;
 
-        public constructor(frequencies: Uint8Array, canvasElement: HTMLCanvasElement, styleOptions: VisualiserStyleOptions) {
+        public constructor(frequencies: Uint8Array, canvasElement: HTMLCanvasElement, styleOptions: Partial<VisualiserStyle>) {
             super(frequencies, canvasElement);
-            this._style = new BarVisualiserStyle(styleOptions);
+            this._style = new VisualiserStyle(styleOptions);
             this.resize();
         }
 
-        public get style(): BarVisualiserStyle {
+        public get style(): VisualiserStyle {
             return this._style;
         }
 

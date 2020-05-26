@@ -1,17 +1,10 @@
 "use strict";
 var E06;
 (function (E06) {
-    class RadialVisualiserStyle extends E06.VisualiserStyle {
-        constructor(styleOptions) {
-            super(styleOptions);
-            this.radial = 314;
-            this.init(styleOptions);
-        }
-    }
     class RadialVisualiser extends E06.Visualiser {
         constructor(frequencies, canvasElement, styleOptions) {
             super(frequencies, canvasElement);
-            this._style = new RadialVisualiserStyle(styleOptions);
+            this._style = new E06.VisualiserStyle(styleOptions);
             this.resize();
         }
         get style() {

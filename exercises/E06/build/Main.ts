@@ -40,14 +40,14 @@ namespace E06 {
     canvas.height = innerHeight;
     document.body.appendChild(canvas);
 
-    const radialStyle: VisualiserStyleOptions = {
+    const radialStyle: Partial<VisualiserStyle> = {
         shadowColorFrom: new RGBA(255, 0, 102, 0.2),
         shadowColorTo: new RGBA(255, 0, 102, 0),
         amplitudeColorLow: new RGBA(255, 0, 102, 0.5),
         amplitudeColorHigh: new RGBA(255, 179, 209, 0.5)
     };
 
-    const barStyle: VisualiserStyleOptions = {
+    const barStyle: Partial<VisualiserStyle> = {
         maxAmplitudeHeight: 100,
         amplitudeWidth: 0.75,
         shadowHeight: 50,
