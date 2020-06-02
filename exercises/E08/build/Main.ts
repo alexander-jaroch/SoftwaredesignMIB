@@ -16,8 +16,8 @@ namespace E08 {
     const questions: Array<Question> = [q1, q2, q3, q4, q5];
     const score: Array<number> = [0, 0];
     let input: string = "";
-    while (input.toLowerCase() !== "q") {
-        try {
+    try {
+        while (input.toLowerCase() !== "q") {
             console.log(
                 "What do you want to do?",
                 "\n[ans] Answer a question from the question pool",
@@ -184,8 +184,8 @@ namespace E08 {
                 }
                 input = "";
             }
-        } catch (e) {
-            console.error("Quiz has ended unexpectedly!");
         }
+    } catch (e) {
+        console.error("Quiz has ended unexpectedly!");
     }
 }
