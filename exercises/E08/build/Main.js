@@ -169,7 +169,7 @@ var E08;
             }
         }
         catch (e) {
-            console.error("Quiz has been aborted by user and ended unexpectedly!");
+            console.error("Quiz has ended unexpectedly!");
         }
     }
 })(E08 || (E08 = {}));
