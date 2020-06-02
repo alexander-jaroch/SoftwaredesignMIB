@@ -17,171 +17,175 @@ namespace E08 {
     const score: Array<number> = [0, 0];
     let input: string = "";
     while (input.toLowerCase() !== "q") {
-        console.log(
-            "What do you want to do?",
-            "\n[ans] Answer a question from the question pool",
-            "\n[add] Add a new question to the question pool",
-            "\n[q] Quit the quiz"
-        );
-        input = prompt("Your Input");
-        console.log(">", input);
-        if (input.toLowerCase() !== "q") {
-            if (input.toLowerCase() === "ans") {
-                const randomQuestion: Question = questions[Math.floor(Math.random() * questions.length)];
-                console.log(randomQuestion.toString());
-                input = prompt("Your Answer");
-                console.log(">", input);
-                const result: boolean = randomQuestion.checkAnswer(input);
-                console.log(result ? "You're right!" : "You're wrong!");
-                score[0]++;
-                if (result) score[1]++;
-                console.log(`You've got ${score[1]} out of ${score[0]} questions right!`);
-            }
-            else if (input.toLowerCase() === "add") {
-                console.log(
-                    "What kind of question do you want to add?",
-                    "\n[yesno] Yes No Question",
-                    "\n[single] Single Choice Question",
-                    "\n[multiple] Multiple Choice Question",
-                    "\n[guess] Guess Question",
-                    "\n[text] Text Question"
-                );
-                input = prompt("Your Choice");
-                console.log(">", input);
-                switch (input.toLowerCase()) {
-                    case "yesno":
-                        console.log("Type in the question statement");
-                        input = prompt("Your Input");
-                        console.log(">", input);
-                        const yesNoQuestion: YesNoQuestion = new YesNoQuestion(input);
-                        do {
-                            console.log("Is that statement true?", "\n[Y] Yes", "\n[N] No");
-                            input = prompt("Your Choice");
-                            console.log(">", input);
-                        }
-                        while (input.toUpperCase() !== "Y" && input.toUpperCase() !== "N");
-                        yesNoQuestion.isCorrect = input.toUpperCase() === "Y";
-                        questions.push(yesNoQuestion);
-                        console.log("You've successfully added a Yes No Question to the pool.");
-                        break;
-                    case "single":
-                        console.log("Type in the question.");
-                        input = prompt("Your Input");
-                        console.log(">", input);
-                        const singleChoiceQuestion: SingleChoiceQuestion = new SingleChoiceQuestion(input);
-                        let singleAnswersCount: number;
-                        do {
-                            console.log("How many answers do you want to add? You can set two to six possilbe answers. Exactly one answer must be correct.");
+        try {
+            console.log(
+                "What do you want to do?",
+                "\n[ans] Answer a question from the question pool",
+                "\n[add] Add a new question to the question pool",
+                "\n[q] Quit the quiz"
+            );
+            input = prompt("Your Input");
+            console.log(">", input);
+            if (input.toLowerCase() !== "q") {
+                if (input.toLowerCase() === "ans") {
+                    const randomQuestion: Question = questions[Math.floor(Math.random() * questions.length)];
+                    console.log(randomQuestion.toString());
+                    input = prompt("Your Answer");
+                    console.log(">", input);
+                    const result: boolean = randomQuestion.checkAnswer(input);
+                    console.log(result ? "You're right!" : "You're wrong!");
+                    score[0]++;
+                    if (result) score[1]++;
+                    console.log(`You've got ${score[1]} out of ${score[0]} questions right!`);
+                }
+                else if (input.toLowerCase() === "add") {
+                    console.log(
+                        "What kind of question do you want to add?",
+                        "\n[yesno] Yes No Question",
+                        "\n[single] Single Choice Question",
+                        "\n[multiple] Multiple Choice Question",
+                        "\n[guess] Guess Question",
+                        "\n[text] Text Question"
+                    );
+                    input = prompt("Your Choice");
+                    console.log(">", input);
+                    switch (input.toLowerCase()) {
+                        case "yesno":
+                            console.log("Type in the question statement");
                             input = prompt("Your Input");
                             console.log(">", input);
-                            singleAnswersCount = Number.parseInt(input);
-                        }
-                        while (Number.isNaN(singleAnswersCount) || singleAnswersCount < 2 || singleAnswersCount > 6);
-                        let singleChoiceAnswers: Array<string> = new Array<string>();
-                        let correctAnswerSet: boolean = false;
-                        for (let i: number = 0; i < singleAnswersCount; i++) {
-                            console.log(`Enter answer #${i + 1}`);
+                            const yesNoQuestion: YesNoQuestion = new YesNoQuestion(input);
+                            do {
+                                console.log("Is that statement true?", "\n[Y] Yes", "\n[N] No");
+                                input = prompt("Your Choice");
+                                console.log(">", input);
+                            }
+                            while (input.toUpperCase() !== "Y" && input.toUpperCase() !== "N");
+                            yesNoQuestion.isCorrect = input.toUpperCase() === "Y";
+                            questions.push(yesNoQuestion);
+                            console.log("You've successfully added a Yes No Question to the pool.");
+                            break;
+                        case "single":
+                            console.log("Type in the question.");
                             input = prompt("Your Input");
                             console.log(">", input);
-                            singleChoiceAnswers.push(input);
-                            if (!correctAnswerSet) {
+                            const singleChoiceQuestion: SingleChoiceQuestion = new SingleChoiceQuestion(input);
+                            let singleAnswersCount: number;
+                            do {
+                                console.log("How many answers do you want to add? You can set two to six possilbe answers. Exactly one answer must be correct.");
+                                input = prompt("Your Input");
+                                console.log(">", input);
+                                singleAnswersCount = Number.parseInt(input);
+                            }
+                            while (Number.isNaN(singleAnswersCount) || singleAnswersCount < 2 || singleAnswersCount > 6);
+                            let singleChoiceAnswers: Array<string> = new Array<string>();
+                            let correctAnswerSet: boolean = false;
+                            for (let i: number = 0; i < singleAnswersCount; i++) {
+                                console.log(`Enter answer #${i + 1}`);
+                                input = prompt("Your Input");
+                                console.log(">", input);
+                                singleChoiceAnswers.push(input);
+                                if (!correctAnswerSet) {
+                                    do {
+                                        console.log("Is this the correct answer?", "\n[Y] Yes", "\n[N] No");
+                                        input = prompt("Your Choice");
+                                        console.log(">", input);
+                                    }
+                                    while (input.toUpperCase() !== "Y" && input.toUpperCase() !== "N");
+                                    if (input.toUpperCase() === "Y") {
+                                        singleChoiceQuestion.correctAnswer = i;
+                                        correctAnswerSet = true;
+                                    }
+                                }
+                            }
+                            if (correctAnswerSet) {
+                                singleChoiceQuestion.answers = singleChoiceAnswers;
+                                questions.push(singleChoiceQuestion);
+                                console.log("You've successfully added a Single Choice Question to the pool.");
+                            }
+                            else {
+                                console.log("You've failed to create a new Single Choice Question, because you didn't provide a correct answer.");
+                            }
+                            break;
+                        case "multiple":
+                            console.log("Type in the question");
+                            input = prompt("Your Input");
+                            console.log(">", input);
+                            const multipleChoiceQuestion: MultipleChoiceQuestion = new MultipleChoiceQuestion(input);
+                            let answersCount: number;
+                            do {
+                                console.log("How many answers do you want to add? You can set two to six possilbe answers. Several answers can be correct.");
+                                input = prompt("Your Input");
+                                console.log(">", input);
+                                answersCount = Number.parseInt(input);
+                            }
+                            while (Number.isNaN(answersCount) || answersCount < 2 || answersCount > 6);
+                            let multipleChoiceAnswers: Array<string> = new Array<string>();
+                            for (let i: number = 0; i < answersCount; i++) {
+                                console.log(`Enter answer #${i + 1}`);
+                                input = prompt("Your Input");
+                                console.log(">", input);
+                                multipleChoiceAnswers.push(input);
                                 do {
-                                    console.log("Is this the correct answer?", "\n[Y] Yes", "\n[N] No");
+                                    console.log("Is this correct answer correct?", "\n[Y] Yes", "\n[N] No");
                                     input = prompt("Your Choice");
                                     console.log(">", input);
                                 }
                                 while (input.toUpperCase() !== "Y" && input.toUpperCase() !== "N");
                                 if (input.toUpperCase() === "Y") {
-                                    singleChoiceQuestion.correctAnswer = i;
-                                    correctAnswerSet = true;
+                                    multipleChoiceQuestion.correctAnswersArray.push(i);
                                 }
                             }
-                        }
-                        if (correctAnswerSet) {
-                            singleChoiceQuestion.answers = singleChoiceAnswers;
-                            questions.push(singleChoiceQuestion);
-                            console.log("You've successfully added a Single Choice Question to the pool.");
-                        }
-                        else {
-                            console.log("You've failed to create a new Single Choice Question, because you didn't provide a correct answer.");
-                        }
-                        break;
-                    case "multiple":
-                        console.log("Type in the question");
-                        input = prompt("Your Input");
-                        console.log(">", input);
-                        const multipleChoiceQuestion: MultipleChoiceQuestion = new MultipleChoiceQuestion(input);
-                        let answersCount: number;
-                        do {
-                            console.log("How many answers do you want to add? You can set two to six possilbe answers. Several answers can be correct.");
+                            multipleChoiceQuestion.answers = multipleChoiceAnswers;
+                            questions.push(multipleChoiceQuestion);
+                            console.log("You've successfully added a Multiple Choice Question to the pool.");
+                            break;
+                        case "guess":
+                            console.log("Type in the question.");
                             input = prompt("Your Input");
                             console.log(">", input);
-                            answersCount = Number.parseInt(input);
-                        }
-                        while (Number.isNaN(answersCount) || answersCount < 2 || answersCount > 6);
-                        let multipleChoiceAnswers: Array<string> = new Array<string>();
-                        for (let i: number = 0; i < answersCount; i++) {
-                            console.log(`Enter answer #${i + 1}`);
-                            input = prompt("Your Input");
-                            console.log(">", input);
-                            multipleChoiceAnswers.push(input);
+                            const guessQuestion: GuessQuestion = new GuessQuestion(input);
+                            let guessValue: number;
                             do {
-                                console.log("Is this correct answer correct?", "\n[Y] Yes", "\n[N] No");
-                                input = prompt("Your Choice");
+                                console.log("Please enter the exact value.");
+                                input = prompt("Your Input");
                                 console.log(">", input);
+                                guessValue = Number.parseFloat(input);
                             }
-                            while (input.toUpperCase() !== "Y" && input.toUpperCase() !== "N");
-                            if (input.toUpperCase() === "Y") {
-                                multipleChoiceQuestion.correctAnswersArray.push(i);
+                            while (Number.isNaN(guessValue));
+                            guessQuestion.corretAnswer = guessValue;
+                            let guessMargin: number;
+                            do {
+                                console.log("Please enter a margin by which the given answer is still deemed correct.");
+                                input = prompt("Your Input");
+                                console.log(">", input);
+                                guessMargin = Number.parseFloat(input);
                             }
-                        }
-                        multipleChoiceQuestion.answers = multipleChoiceAnswers;
-                        questions.push(multipleChoiceQuestion);
-                        console.log("You've successfully added a Multiple Choice Question to the pool.");
-                        break;
-                    case "guess":
-                        console.log("Type in the question.");
-                        input = prompt("Your Input");
-                        console.log(">", input);
-                        const guessQuestion: GuessQuestion = new GuessQuestion(input);
-                        let guessValue: number;
-                        do {
-                            console.log("Please enter the exact value.");
+                            while (Number.isNaN(guessMargin));
+                            guessQuestion.inaccuracyRange = guessMargin;
+                            questions.push(guessQuestion);
+                            console.log("You've successfully added a Guess Question to the pool.");
+                            break;
+                        case "text":
+                            console.log("Type in the question.");
                             input = prompt("Your Input");
                             console.log(">", input);
-                            guessValue = Number.parseFloat(input);
-                        }
-                        while (Number.isNaN(guessValue));
-                        guessQuestion.corretAnswer = guessValue;
-                        let guessMargin: number;
-                        do {
-                            console.log("Please enter a margin by which the given answer is still deemed correct.");
+                            const textQuestion: FreeTextQuestion = new FreeTextQuestion(input);
+                            console.log("Please enter the answer text.");
                             input = prompt("Your Input");
                             console.log(">", input);
-                            guessMargin = Number.parseFloat(input);
-                        }
-                        while (Number.isNaN(guessMargin));
-                        guessQuestion.inaccuracyRange = guessMargin;
-                        questions.push(guessQuestion);
-                        console.log("You've successfully added a Guess Question to the pool.");
-                        break;
-                    case "text":
-                        console.log("Type in the question.");
-                        input = prompt("Your Input");
-                        console.log(">", input);
-                        const textQuestion: FreeTextQuestion = new FreeTextQuestion(input);
-                        console.log("Please enter the answer text.");
-                        input = prompt("Your Input");
-                        console.log(">", input);
-                        textQuestion.correctAnswer = input;
-                        questions.push(textQuestion);
-                        console.log("You've successfully added a Text Question to the pool.");
-                        break;
-                    default:
-                        console.warn(`"${input}" is not a valid question type!`);
+                            textQuestion.correctAnswer = input;
+                            questions.push(textQuestion);
+                            console.log("You've successfully added a Text Question to the pool.");
+                            break;
+                        default:
+                            console.warn(`"${input}" is not a valid question type!`);
+                    }
                 }
+                input = "";
             }
-            input = "";
+        } catch (e) {
+            console.error("Quiz has been aborted by user and ended unexpectedly!");
         }
     }
 }
