@@ -17,8 +17,8 @@ var E08;
     const questions = [q1, q2, q3, q4, q5];
     const score = [0, 0];
     let input = "";
-    while (input.toLowerCase() !== "q") {
-        try {
+    try {
+        while (input.toLowerCase() !== "q") {
             console.log("What do you want to do?", "\n[ans] Answer a question from the question pool", "\n[add] Add a new question to the question pool", "\n[q] Quit the quiz");
             input = prompt("Your Input");
             console.log(">", input);
@@ -168,9 +168,9 @@ var E08;
                 input = "";
             }
         }
-        catch (e) {
-            console.error("Quiz has ended unexpectedly!");
-        }
+    }
+    catch (e) {
+        console.error("Quiz has ended unexpectedly!");
     }
 })(E08 || (E08 = {}));
 //# sourceMappingURL=Main.js.map
