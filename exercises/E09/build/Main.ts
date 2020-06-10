@@ -30,14 +30,13 @@ namespace E09 {
     async function Main(): Promise<void> {
         const quiz: Quiz = new Quiz(await (await fetch("DefaultQuestions.json")).json());
         let input: string;
-        printLn("The Quiz\n========");
         do {
-            printLn("[ANS] answer a question\n[ADD] add a question\n[SVQ] save questions\n[CLC] clear console\n[ Q ] quit quiz");
+            printLn("What do you want to do?\n[ A ] answer a question\n[ADD] add a question\n[SVQ] save questions\n[CLC] clear console\n[ Q ] quit quiz");
             input = await getInput();
 
             switch (prepareInput(input)) {
                 // answer a question
-                case "ANS":
+                case "A":
                     printLn(quiz.currentQuestion.toString());
                     input = await getInput();
                     const isRight: boolean = quiz.answerCurrentQuestion(input);
@@ -62,7 +61,6 @@ namespace E09 {
                     break;
                 case "CLC":
                     outputDiv.innerHTML = "";
-                    printLn("The Quiz\n========");
             }
         }
         while (!["Q", "QUIT", "EXIT"].includes(prepareInput(input)));
