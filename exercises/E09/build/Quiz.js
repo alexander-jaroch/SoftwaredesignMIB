@@ -20,19 +20,26 @@ var E09;
             this.questions.push(_question);
         }
         answerCurrentQuestion(_input) {
-            const r = this.questions[this.questionIndex].check(_input);
+            const isRight = this.questions[this.questionIndex].check(_input);
             this.answerCount++;
-            if (r)
+            if (isRight)
                 this.correctCount++;
             this.changeCurrentQuestion();
-            return r;
+            return isRight;
+        }
+        json() {
+            let questionData = new Array();
+            for (const question of this.questions) {
+                questionData.push(question.json());
+            }
+            return questionData;
         }
         changeCurrentQuestion() {
-            let r;
+            let randomIndex;
             do
-                r = Math.floor(Math.random() * this.questions.length);
-            while (r === this.questionIndex);
-            this.questionIndex = r;
+                randomIndex = Math.floor(Math.random() * this.questions.length);
+            while (randomIndex === this.questionIndex);
+            this.questionIndex = randomIndex;
         }
         initQuestions(_questionSet) {
             for (let i = 0; i < _questionSet.length; i++) {

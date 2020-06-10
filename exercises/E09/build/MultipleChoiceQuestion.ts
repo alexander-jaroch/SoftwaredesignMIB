@@ -18,7 +18,7 @@ namespace E09 {
         public toString(): string {
             const letterSet: Array<string> = ["A", "B", "C", "D", "E", "F"];
             const usedIndices: Array<number> = new Array<number>();
-            let r: string = this.text;
+            let questionStr: string = this.text;
             for (let i: number = 0; i < this.answers.length; i++) {
                 let randomIndex: number;
                 do
@@ -26,9 +26,9 @@ namespace E09 {
                 while (usedIndices.includes(randomIndex));
                 usedIndices.push(randomIndex);
                 this.answers[randomIndex].letter = letterSet[i];
-                r += "\n" + this.answers[randomIndex].toString();
+                questionStr += "\n" + this.answers[randomIndex].toString();
             }
-            return r;
+            return questionStr;
         }
 
         public check(_input: string): boolean {

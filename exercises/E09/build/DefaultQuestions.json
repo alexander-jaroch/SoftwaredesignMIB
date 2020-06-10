@@ -1,7 +1,7 @@
 [
     {
         "type": "MultipleChoiceQuestion",
-        "text": "Which are planets of our solar system? Mercury, Venus, Earth, Mars, ...",
+        "text": "Which of the following are planets of our solar system? Mercury, Venus, Earth, Mars, ...",
         "answers": [
             {
                 "text": "Snickers",

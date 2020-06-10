@@ -27,20 +27,28 @@ namespace E09 {
         }
 
         public answerCurrentQuestion(_input: string): boolean {
-            const r: boolean = this.questions[this.questionIndex].check(_input);
+            const isRight: boolean = this.questions[this.questionIndex].check(_input);
             this.answerCount++;
-            if (r)
+            if (isRight)
                 this.correctCount++;
             this.changeCurrentQuestion();
-            return r;
+            return isRight;
+        }
+
+        public json(): Array<QuestionData> {
+            let questionData: Array<QuestionData> = new Array<QuestionData>();
+            for(const question of this.questions) {
+                questionData.push(question.json());
+            }
+            return questionData;
         }
 
         private changeCurrentQuestion(): void {
-            let r: number;
+            let randomIndex: number;
             do
-                r = Math.floor(Math.random() * this.questions.length);
-            while (r === this.questionIndex);
-            this.questionIndex = r;
+                randomIndex = Math.floor(Math.random() * this.questions.length);
+            while (randomIndex === this.questionIndex);
+            this.questionIndex = randomIndex;
         }
 
         private initQuestions(_questionSet: Array<QuestionData>): void {

@@ -12,7 +12,7 @@ var E09;
         toString() {
             const letterSet = ["A", "B", "C", "D", "E", "F"];
             const usedIndices = new Array();
-            let r = this.text;
+            let questionStr = this.text;
             for (let i = 0; i < this.answers.length; i++) {
                 let randomIndex;
                 do
@@ -20,9 +20,9 @@ var E09;
                 while (usedIndices.includes(randomIndex));
                 usedIndices.push(randomIndex);
                 this.answers[randomIndex].letter = letterSet[i];
-                r += "\n" + this.answers[randomIndex].toString();
+                questionStr += "\n" + this.answers[randomIndex].toString();
             }
-            return r;
+            return questionStr;
         }
         check(_input) {
             const input = _input.toUpperCase().replace(/,?\s*/g, "").split("");
