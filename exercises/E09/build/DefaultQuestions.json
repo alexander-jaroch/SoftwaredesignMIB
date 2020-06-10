@@ -1,0 +1,69 @@
+{
+    "multipleChoiceQuestions": [
+        {
+            "text": "Which are planets of our solar system? Mercury, Venus, Earth, Mars, ...",
+            "answers": [
+                {
+                    "text": "Snickers",
+                    "isRight": false
+                },
+                {
+                    "text": "Jupiter",
+                    "isRight": true
+                },
+                {
+                    "text": "Saturn",
+                    "isRight": true
+                },
+                {
+                    "text": "Uranus",
+                    "isRight": true
+                },
+                {
+                    "text": "Neptune",
+                    "isRight": true
+                },
+                {
+                    "text": "Pluto",
+                    "isRight": false
+                }
+            ]
+        },
+        {
+            "text": "Violets are...",
+            "answers": [
+                {
+                    "text": "red",
+                    "isRight": false
+                },
+                {
+                    "text": "blue",
+                    "isRight": false
+                },
+                {
+                    "text": "violet",
+                    "isRight": true
+                }
+            ]
+        }
+    ],
+    "trueFalseQuestions": [
+        {
+            "text": "Are there red roses?",
+            "answer": true
+        }
+    ],
+    "guessQuestions": [
+        {
+            "text": "What is Pi? Enter at least four digits after dot.",
+            "answer": 3.1415,
+            "tolerance": 0.0001
+        }
+    ],
+    "textQuestions": [
+        {
+            "text": "Who is the President of the United States?",
+            "answer": "Donald Trump"
+        }
+    ]
+}

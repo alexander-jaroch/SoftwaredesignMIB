@@ -3,10 +3,11 @@ var E09;
 (function (E09) {
     class Quiz {
         constructor(_questions) {
-            this.questions = _questions;
+            this.questions = new Array();
             this.questionIndex = -1;
             this.answerCount = 0;
             this.correctCount = 0;
+            this.initQuestions(_questions);
             this.changeCurrentQuestion();
         }
         get currentQuestion() {
@@ -32,6 +33,24 @@ var E09;
                 r = Math.floor(Math.random() * this.questions.length);
             while (r === this.questionIndex);
             this.questionIndex = r;
+        }
+        initQuestions(_questionSet) {
+            for (const question of _questionSet.multipleChoiceQuestions) {
+                const answers = new Array();
+                for (const answer of question.answers) {
+                    answers.push(new E09.Answer(answer.text, answer.isRight));
+                }
+                this.questions.push(new E09.MultipleChoiceQuestion(question.text, answers));
+            }
+            for (const question of _questionSet.trueFalseQuestions) {
+                this.questions.push(new E09.TrueFalseQuestion(question.text, question.answer));
+            }
+            for (const question of _questionSet.guessQuestions) {
+                this.questions.push(new E09.GuessQuestion(question.text, question.answer, question.tolerance));
+            }
+            for (const question of _questionSet.textQuestions) {
+                this.questions.push(new E09.TextQuestion(question.text, question.answer));
+            }
         }
     }
     E09.Quiz = Quiz;

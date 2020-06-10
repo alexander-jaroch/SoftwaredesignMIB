@@ -1,18 +1,4 @@
 namespace E09 {
-    const predefinedQuestions: Array<Question> = [
-        new TrueFalseQuestion("Is Berlin the capital of Germany?", true),
-        new MultipleChoiceQuestion(
-            "Which cities are capitals?",
-            [
-                new Answer("Furtwangen", false),
-                new Answer("Berlin", true),
-                new Answer("Paris", true)
-            ]
-        ),
-        new GuessQuestion("What is Pi?", 3.141, 0.001),
-        new TextQuestion("Who is teaching Software Design at HFU?", "Jirka Dell'Oro-Friedl")
-    ];
-
     const outputElt: HTMLDivElement = document.createElement("div");
     document.body.appendChild(outputElt);
 
@@ -41,7 +27,8 @@ namespace E09 {
 
     // Main
     async function Main(): Promise<void> {
-        const quiz: Quiz = new Quiz(predefinedQuestions);
+        const defaultQuestions: QuestionDataSet = await (await fetch("DefaultQuestions.json")).json();
+        const quiz: Quiz = new Quiz(defaultQuestions);
 
         printLn("The Quiz");
         printLn("========");

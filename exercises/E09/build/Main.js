@@ -1,16 +1,6 @@
 "use strict";
 var E09;
 (function (E09) {
-    const predefinedQuestions = [
-        new E09.TrueFalseQuestion("Is Berlin the capital of Germany?", true),
-        new E09.MultipleChoiceQuestion("Which cities are capitals?", [
-            new E09.Answer("Furtwangen", false),
-            new E09.Answer("Berlin", true),
-            new E09.Answer("Paris", true)
-        ]),
-        new E09.GuessQuestion("What is Pi?", 3.141, 0.001),
-        new E09.TextQuestion("Who is teaching Software Design at HFU?", "Jirka Dell'Oro-Friedl")
-    ];
     const outputElt = document.createElement("div");
     document.body.appendChild(outputElt);
     const inputElt = document.createElement("input");
@@ -34,7 +24,8 @@ var E09;
     Main();
     // Main
     async function Main() {
-        const quiz = new E09.Quiz(predefinedQuestions);
+        const defaultQuestions = await (await fetch("DefaultQuestions.json")).json();
+        const quiz = new E09.Quiz(defaultQuestions);
         printLn("The Quiz");
         printLn("========");
         let input;

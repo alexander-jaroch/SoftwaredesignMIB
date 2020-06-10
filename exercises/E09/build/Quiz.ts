@@ -1,15 +1,23 @@
 namespace E09 {
+    export interface QuestionDataSet {
+        multipleChoiceQuestions: Array<MultipleChoiceQuestionData>;
+        trueFalseQuestions: Array<TrueFalseQuestionData>;
+        guessQuestions: Array<GuessQuestionData>;
+        textQuestions: Array<TextQuestionData>;
+    }
+
     export class Quiz {
         private questions: Array<Question>;
         private questionIndex: number;
         private answerCount: number;
         private correctCount: number;
 
-        public constructor(_questions: Array<Question>) {
-            this.questions = _questions;
+        public constructor(_questions: QuestionDataSet) {
+            this.questions = new Array<Question>();
             this.questionIndex = -1;
             this.answerCount = 0;
             this.correctCount = 0;
+            this.initQuestions(_questions);
             this.changeCurrentQuestion();
         }
 
@@ -40,6 +48,28 @@ namespace E09 {
                 r = Math.floor(Math.random() * this.questions.length);
             while (r === this.questionIndex);
             this.questionIndex = r;
+        }
+
+        private initQuestions(_questionSet: QuestionDataSet): void {
+            for (const question of _questionSet.multipleChoiceQuestions) {
+                const answers: Array<Answer> = new Array<Answer>();
+                for (const answer of question.answers) {
+                    answers.push(new Answer(answer.text, answer.isRight));
+                }
+                this.questions.push(new MultipleChoiceQuestion(question.text, answers));
+            }
+
+            for (const question of _questionSet.trueFalseQuestions) {
+                this.questions.push(new TrueFalseQuestion(question.text, question.answer));
+            }
+
+            for (const question of _questionSet.guessQuestions) {
+                this.questions.push(new GuessQuestion(question.text, question.answer, question.tolerance));
+            }
+
+            for (const question of _questionSet.textQuestions) {
+                this.questions.push(new TextQuestion(question.text, question.answer));
+            }
         }
     }
 }

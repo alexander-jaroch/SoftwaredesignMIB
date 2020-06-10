@@ -1,4 +1,9 @@
 namespace E09 {
+    export interface AnswerData {
+        text: string;
+        isRight: boolean;
+    }
+    
     export class Answer {
         public letter: string;
         private text: string;
