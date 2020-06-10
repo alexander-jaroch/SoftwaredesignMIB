@@ -6,14 +6,19 @@ var E09;
             super(_text);
             this.answer = _isTrue;
         }
+        static parse(_json) {
+            return new TrueFalseQuestion(_json.text, _json.answer);
+        }
         toString() {
             return this.text + "\n[Y] Yes\n[N] No";
         }
         check(_input) {
-            return this.answer && _input.trim().toUpperCase() === "Y" || !this.answer && _input.trim().toUpperCase() === "N";
+            const input = _input.trim().toUpperCase();
+            return this.answer && input === "Y" || !this.answer && input === "N";
         }
         json() {
             return {
+                type: "TrueFalseQuestion",
                 text: this.text,
                 answer: this.answer
             };

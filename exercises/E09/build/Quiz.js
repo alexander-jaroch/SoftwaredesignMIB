@@ -35,21 +35,21 @@ var E09;
             this.questionIndex = r;
         }
         initQuestions(_questionSet) {
-            for (const question of _questionSet.multipleChoiceQuestions) {
-                const answers = new Array();
-                for (const answer of question.answers) {
-                    answers.push(new E09.Answer(answer.text, answer.isRight));
+            for (let i = 0; i < _questionSet.length; i++) {
+                switch (_questionSet[i].type) {
+                    case "MultipleChoiceQuestion":
+                        this.questions.push(E09.MultipleChoiceQuestion.parse(_questionSet[i]));
+                        break;
+                    case "TrueFalseQuestion":
+                        this.questions.push(E09.TrueFalseQuestion.parse(_questionSet[i]));
+                        break;
+                    case "GuessQuestion":
+                        this.questions.push(E09.GuessQuestion.parse(_questionSet[i]));
+                        break;
+                    case "TextQuestion":
+                        this.questions.push(E09.TextQuestion.parse(_questionSet[i]));
+                        break;
                 }
-                this.questions.push(new E09.MultipleChoiceQuestion(question.text, answers));
-            }
-            for (const question of _questionSet.trueFalseQuestions) {
-                this.questions.push(new E09.TrueFalseQuestion(question.text, question.answer));
-            }
-            for (const question of _questionSet.guessQuestions) {
-                this.questions.push(new E09.GuessQuestion(question.text, question.answer, question.tolerance));
-            }
-            for (const question of _questionSet.textQuestions) {
-                this.questions.push(new E09.TextQuestion(question.text, question.answer));
             }
         }
     }

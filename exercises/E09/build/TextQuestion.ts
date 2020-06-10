@@ -11,12 +11,24 @@ namespace E09 {
             this.answer = _answer;
         }
 
+        public static parse(_json: TextQuestionData): TextQuestion {
+            return new TextQuestion(_json.text, _json.answer);
+        }
+
         public toString(): string {
             return this.text;
         }
 
         public check(_input: string): boolean {
             return _input.trim().replace(/\s+/g, " ") === this.answer;
+        }
+
+        public json(): TextQuestionData {
+            return {
+                type: "TextQuestion",
+                text: this.text,
+                answer: this.answer
+            };
         }
     }
 }

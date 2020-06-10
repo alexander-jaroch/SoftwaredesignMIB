@@ -6,6 +6,9 @@ var E09;
             super(_text);
             this.answers = _answers;
         }
+        static parse(_json) {
+            return new MultipleChoiceQuestion(_json.text, _json.answers.map((x) => E09.Answer.parse(x)));
+        }
         toString() {
             const letterSet = ["A", "B", "C", "D", "E", "F"];
             const usedIndices = new Array();
@@ -22,12 +25,19 @@ var E09;
             return r;
         }
         check(_input) {
-            const input = _input.trim().toUpperCase().split(" ");
+            const input = _input.toUpperCase().replace(/,?\s*/g, "").split("");
             for (const answer of this.answers) {
                 if (answer.check() && !input.includes(answer.letter) || input.includes(answer.letter) && !answer.check())
                     return false;
             }
             return true;
+        }
+        json() {
+            return {
+                type: "MultipleChoiceQuestion",
+                text: this.text,
+                answers: this.answers.map((x) => x.json())
+            };
         }
     }
     E09.MultipleChoiceQuestion = MultipleChoiceQuestion;

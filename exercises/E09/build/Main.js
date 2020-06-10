@@ -1,43 +1,66 @@
 "use strict";
 var E09;
 (function (E09) {
-    const outputElt = document.createElement("div");
-    document.body.appendChild(outputElt);
+    // output display
+    const outputDiv = document.createElement("div");
+    outputDiv.classList.add("padding");
+    document.body.appendChild(outputDiv);
+    // input line
+    const inputDiv = document.createElement("div");
+    inputDiv.classList.add("input", "padding");
+    document.body.appendChild(inputDiv);
     const inputElt = document.createElement("input");
     inputElt.type = "text";
-    document.body.appendChild(inputElt);
-    /*const modeBtn: HTMLDivElement = document.createElement("div");
-    modeBtn.id = "modeBtn";
-    modeBtn.dataset.mode = "light";
-    modeBtn.addEventListener("click", () => {
-        if (modeBtn.dataset.mode === "light") {
-            document.body.classList.add("darkmode");
-            modeBtn.dataset.mode = "dark";
-        } else {
-            document.body.classList.remove("darkmode");
-            modeBtn.dataset.mode = "light";
-        }
-    });
-    document.body.appendChild(modeBtn);*/
+    inputDiv.appendChild(inputElt);
+    // dark mode button
+    const mode = document.createElement("div");
+    mode.classList.add("mode");
+    mode.addEventListener("click", changeMode);
+    function changeMode() {
+        document.body.classList.toggle("dark");
+    }
+    document.body.appendChild(mode);
     // ???
     addEventListener("click", () => { inputElt.focus(); });
     Main();
     // Main
     async function Main() {
-        const defaultQuestions = await (await fetch("DefaultQuestions.json")).json();
-        const quiz = new E09.Quiz(defaultQuestions);
-        printLn("The Quiz");
-        printLn("========");
+        const quiz = new E09.Quiz(await (await fetch("DefaultQuestions.json")).json());
         let input;
         do {
-            printLn(quiz.currentQuestion.toString());
+            printLn("The Quiz\n========\n[A] answer a question\n[ADD] add a question\n[SAVE] save questions\n[CLC] clear console\n[EXIT] quit quiz");
             input = await getInput();
-            printLn("> " + input);
-            printLn(quiz.answerCurrentQuestion(input) + "");
-            printLn(quiz.score);
-        } while (input !== "exit");
+            switch (prepareInput(input)) {
+                // answer a question
+                case "A":
+                    printLn(quiz.currentQuestion.toString());
+                    input = await getInput();
+                    printLn(quiz.answerCurrentQuestion(input) + "");
+                    printLn(quiz.score + "\n");
+                    break;
+                // add a question
+                case "ADD":
+                    break;
+                // save questions
+                case "SAVE":
+                    const questionString = JSON.stringify(quiz);
+                    const questionBlob = new Blob([questionString], { type: "application/json" });
+                    printLn("Filename: ");
+                    input = await getInput();
+                    print("File ready... ");
+                    printDl(URL.createObjectURL(questionBlob), input);
+                    printLn(" (" + questionBlob.size + " Bytes)\n");
+                    break;
+                case "CLC":
+                    outputDiv.innerHTML = "";
+            }
+        } while (!["EXIT", "QUIT", "Q"].includes(prepareInput(input)));
         inputElt.disabled = true;
         inputElt.value = "Quiz ended.";
+    }
+    // prepares input for switch cases
+    function prepareInput(_input) {
+        return _input.trim().toUpperCase();
     }
     // waits for user input
     function getInput() {
@@ -48,6 +71,8 @@ var E09;
                     const value = inputElt.value;
                     inputElt.value = "";
                     inputElt.removeEventListener("keydown", keydownEvent);
+                    printLn("> " + value);
+                    inputElt.scrollIntoView();
                     resolve(value);
                 }
             };
@@ -55,12 +80,27 @@ var E09;
         });
     }
     // prints a line on custom console
-    function printLn(_text) {
+    function printLn(_text = "") {
+        print(_text);
+        outputDiv.appendChild(document.createElement("br"));
+    }
+    // prints on custom console
+    function print(_text) {
         const textParts = _text.split("\n");
-        for (const part of textParts) {
-            outputElt.appendChild(new Text(part));
-            outputElt.appendChild(document.createElement("br"));
+        for (let i = 0; i < textParts.length; i++) {
+            outputDiv.appendChild(new Text(textParts[i]));
+            if (i < textParts.length - 1)
+                outputDiv.appendChild(document.createElement("br"));
         }
+    }
+    // prints a download url
+    function printDl(_url, _filename) {
+        const download = document.createElement("a");
+        _filename += ".json";
+        download.href = _url;
+        download.download = _filename;
+        download.appendChild(new Text(_filename));
+        outputDiv.appendChild(download);
     }
 })(E09 || (E09 = {}));
 //# sourceMappingURL=Main.js.map

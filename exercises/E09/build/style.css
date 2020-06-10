@@ -4,9 +4,71 @@
     font-size: 24px;
     line-height: 100%;
     margin: 0;
+    padding: 0;
     width: 100%;
 }
 
 body {
-    margin: 12px;
+    color: black;
+    overflow-x: hidden;
+    padding: 12px 0;
+}
+
+body.dark {
+    background-color: black;
+    color: white;
+}
+
+.dark input {
+    background-color: black;
+    color: white;
+}
+
+.input {
+    display: flex;
+}
+
+.input input {
+    width: calc(100% - 48px);
+}
+
+.input::before {
+    content: ">";
+    padding: 0 12px 0 0;
+}
+
+.padding {
+    padding: 0 12px;
+}
+
+.dark a {
+    color: lightskyblue;
+}
+
+
+.mode {
+    position: fixed;
+    top: 12px;
+    right: 24px;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    background-color: black;
+}
+
+.mode::after {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    content: "☼";
+    color: white;
+    font-size: 48px;
+}
+
+.dark .mode {
+    background-color: white;
+}
+
+.dark .mode::after {
+    color: black;
 }

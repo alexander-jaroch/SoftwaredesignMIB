@@ -1,18 +1,11 @@
 namespace E09 {
-    export interface QuestionDataSet {
-        multipleChoiceQuestions: Array<MultipleChoiceQuestionData>;
-        trueFalseQuestions: Array<TrueFalseQuestionData>;
-        guessQuestions: Array<GuessQuestionData>;
-        textQuestions: Array<TextQuestionData>;
-    }
-
     export class Quiz {
         private questions: Array<Question>;
         private questionIndex: number;
         private answerCount: number;
         private correctCount: number;
 
-        public constructor(_questions: QuestionDataSet) {
+        public constructor(_questions: Array<QuestionData>) {
             this.questions = new Array<Question>();
             this.questionIndex = -1;
             this.answerCount = 0;
@@ -50,25 +43,22 @@ namespace E09 {
             this.questionIndex = r;
         }
 
-        private initQuestions(_questionSet: QuestionDataSet): void {
-            for (const question of _questionSet.multipleChoiceQuestions) {
-                const answers: Array<Answer> = new Array<Answer>();
-                for (const answer of question.answers) {
-                    answers.push(new Answer(answer.text, answer.isRight));
+        private initQuestions(_questionSet: Array<QuestionData>): void {
+            for (let i: number = 0; i < _questionSet.length; i++) {
+                switch (_questionSet[i].type) {
+                    case "MultipleChoiceQuestion":
+                        this.questions.push(MultipleChoiceQuestion.parse(_questionSet[i] as MultipleChoiceQuestionData));
+                        break;
+                    case "TrueFalseQuestion":
+                        this.questions.push(TrueFalseQuestion.parse(_questionSet[i] as TrueFalseQuestionData));
+                        break;
+                    case "GuessQuestion":
+                        this.questions.push(GuessQuestion.parse(_questionSet[i] as GuessQuestionData));
+                        break;
+                    case "TextQuestion":
+                        this.questions.push(TextQuestion.parse(_questionSet[i] as TextQuestionData));
+                        break;
                 }
-                this.questions.push(new MultipleChoiceQuestion(question.text, answers));
-            }
-
-            for (const question of _questionSet.trueFalseQuestions) {
-                this.questions.push(new TrueFalseQuestion(question.text, question.answer));
-            }
-
-            for (const question of _questionSet.guessQuestions) {
-                this.questions.push(new GuessQuestion(question.text, question.answer, question.tolerance));
-            }
-
-            for (const question of _questionSet.textQuestions) {
-                this.questions.push(new TextQuestion(question.text, question.answer));
             }
         }
     }

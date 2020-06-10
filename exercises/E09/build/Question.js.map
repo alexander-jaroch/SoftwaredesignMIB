@@ -1,1 +1,1 @@
-{"version":3,"file":"Question.js","sourceRoot":"","sources":["Question.ts"],"names":[],"mappings":";AAAA,IAAU,GAAG,CAeZ;AAfD,WAAU,GAAG;IAKT,MAAsB,QAAQ;QAG1B,YAAmB,KAAa;YAC5B,IAAI,CAAC,IAAI,GAAG,KAAK,CAAC;QACtB,CAAC;KAIJ;IATqB,YAAQ,WAS7B,CAAA;AACL,CAAC,EAfS,GAAG,KAAH,GAAG,QAeZ"}
+{"version":3,"file":"Question.js","sourceRoot":"","sources":["Question.ts"],"names":[],"mappings":";AAAA,IAAU,GAAG,CAiBZ;AAjBD,WAAU,GAAG;IAMT,MAAsB,QAAQ;QAG1B,YAAmB,KAAa;YAC5B,IAAI,CAAC,IAAI,GAAG,KAAK,CAAC;QACtB,CAAC;KAKJ;IAVqB,YAAQ,WAU7B,CAAA;AACL,CAAC,EAjBS,GAAG,KAAH,GAAG,QAiBZ"}

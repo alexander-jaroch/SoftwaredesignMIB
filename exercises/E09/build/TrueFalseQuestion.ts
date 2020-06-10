@@ -11,20 +11,25 @@ namespace E09 {
             this.answer = _isTrue;
         }
 
+        public static parse(_json: TrueFalseQuestionData): TrueFalseQuestion {
+            return new TrueFalseQuestion(_json.text, _json.answer);
+        }
+
         public toString(): string {
             return this.text + "\n[Y] Yes\n[N] No";
         }
 
         public check(_input: string): boolean {
-            return this.answer && _input.trim().toUpperCase() === "Y" || !this.answer && _input.trim().toUpperCase() === "N";
+            const input: string = _input.trim().toUpperCase();
+            return this.answer && input === "Y" || !this.answer && input === "N";
         }
 
         public json(): TrueFalseQuestionData {
             return {
+                type: "TrueFalseQuestion",
                 text: this.text,
                 answer: this.answer
             };
         }
-
     }
 }

@@ -3,7 +3,7 @@ namespace E09 {
         text: string;
         isRight: boolean;
     }
-    
+
     export class Answer {
         public letter: string;
         private text: string;
@@ -14,12 +14,23 @@ namespace E09 {
             this.isRight = _isRight;
         }
 
+        public static parse(_json: AnswerData): Answer {
+            return new Answer(_json.text, _json.isRight);
+        }
+
         public toString(): string {
             return "[" + this.letter + "] " + this.text;
         }
 
         public check(): boolean {
             return this.isRight;
+        }
+
+        public json(): AnswerData {
+            return {
+                text: this.text,
+                isRight: this.isRight
+            };
         }
     }
 }

@@ -11,6 +11,10 @@ namespace E09 {
             this.answers = _answers;
         }
 
+        public static parse(_json: MultipleChoiceQuestionData): MultipleChoiceQuestion {
+            return new MultipleChoiceQuestion(_json.text, _json.answers.map((x) => Answer.parse(x)));
+        }
+
         public toString(): string {
             const letterSet: Array<string> = ["A", "B", "C", "D", "E", "F"];
             const usedIndices: Array<number> = new Array<number>();
@@ -28,12 +32,20 @@ namespace E09 {
         }
 
         public check(_input: string): boolean {
-            const input: Array<string> = _input.trim().toUpperCase().split(" ");
+            const input: Array<string> = _input.toUpperCase().replace(/,?\s*/g, "").split("");
             for (const answer of this.answers) {
                 if (answer.check() && !input.includes(answer.letter) || input.includes(answer.letter) && !answer.check())
                     return false;
             }
             return true;
+        }
+
+        public json(): MultipleChoiceQuestionData {
+            return {
+                type: "MultipleChoiceQuestion",
+                text: this.text,
+                answers: this.answers.map((x) => x.json())
+            };
         }
     }
 }

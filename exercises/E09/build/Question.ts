@@ -1,5 +1,6 @@
 namespace E09 {
     export interface QuestionData {
+        type: string;
         text: string;
     }
 
@@ -12,5 +13,6 @@ namespace E09 {
 
         public abstract toString(): string;
         public abstract check(_input: string): boolean;
+        public abstract json(): QuestionData;
     }
 }

@@ -6,11 +6,21 @@ var E09;
             super(_text);
             this.answer = _answer;
         }
+        static parse(_json) {
+            return new TextQuestion(_json.text, _json.answer);
+        }
         toString() {
             return this.text;
         }
         check(_input) {
             return _input.trim().replace(/\s+/g, " ") === this.answer;
+        }
+        json() {
+            return {
+                type: "TextQuestion",
+                text: this.text,
+                answer: this.answer
+            };
         }
     }
     E09.TextQuestion = TextQuestion;

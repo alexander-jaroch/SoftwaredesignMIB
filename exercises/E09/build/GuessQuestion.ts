@@ -14,16 +14,29 @@ namespace E09 {
             this.tolerance = _tolerance;
         }
 
+        public static parse(_json: GuessQuestionData): GuessQuestion {
+            return new GuessQuestion(_json.text, _json.answer, _json.tolerance);
+        }
+
         public toString(): string {
             return this.text;
         }
 
         public check(_input: string): boolean {
-            const input: number = Number.parseFloat(_input);
+            const input: number = Number.parseFloat(_input.trim());
             if (!Number.isNaN(input)) {
                 return this.answer - this.tolerance <= input && input <= this.answer + this.tolerance;
             }
             else return false;
+        }
+
+        public json(): GuessQuestionData {
+            return {
+                type: "GuessQuestion",
+                text: this.text,
+                answer: this.answer,
+                tolerance: this.tolerance
+            };
         }
     }
 }
