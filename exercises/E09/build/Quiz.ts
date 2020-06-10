@@ -37,7 +37,7 @@ namespace E09 {
 
         public json(): Array<QuestionData> {
             let questionData: Array<QuestionData> = new Array<QuestionData>();
-            for(const question of this.questions) {
+            for (const question of this.questions) {
                 questionData.push(question.json());
             }
             return questionData;
