@@ -30,23 +30,28 @@ namespace E09 {
     async function Main(): Promise<void> {
         const quiz: Quiz = new Quiz(await (await fetch("DefaultQuestions.json")).json());
         let input: string;
+        printLn("The Quiz\n========");
         do {
-            printLn("The Quiz\n========\n[A] answer a question\n[ADD] add a question\n[SAVE] save questions\n[CLC] clear console\n[EXIT] quit quiz");
+            printLn("[ANS] answer a question\n[ADD] add a question\n[SVQ] save questions\n[CLC] clear console\n[ Q ] quit quiz");
             input = await getInput();
 
             switch (prepareInput(input)) {
                 // answer a question
-                case "A":
+                case "ANS":
                     printLn(quiz.currentQuestion.toString());
                     input = await getInput();
-                    printLn(quiz.answerCurrentQuestion(input) + "");
+                    const isRight: boolean = quiz.answerCurrentQuestion(input);
+                    if (isRight)
+                        printLn("You're right!");
+                    else
+                        printLn("You're wrong!");
                     printLn(quiz.score + "\n");
                     break;
                 // add a question
                 case "ADD":
                     break;
                 // save questions
-                case "SAVE":
+                case "SVQ":
                     const questionString: string = JSON.stringify(quiz);
                     const questionBlob: Blob = new Blob([questionString], { type: "application/json" });
                     printLn("Filename: ");
@@ -57,9 +62,10 @@ namespace E09 {
                     break;
                 case "CLC":
                     outputDiv.innerHTML = "";
+                    printLn("The Quiz\n========");
             }
         }
-        while (!["EXIT", "QUIT", "Q"].includes(prepareInput(input)));
+        while (!["Q", "QUIT", "EXIT"].includes(prepareInput(input)));
         inputElt.disabled = true;
         inputElt.value = "Quiz ended.";
     }
