@@ -6,11 +6,10 @@ namespace E09 {
         private correctCount: number;
 
         public constructor(_questions: Array<QuestionData>) {
-            this.questions = new Array<Question>();
+            this.initQuestions(_questions);
             this.questionIndex = -1;
             this.answerCount = 0;
             this.correctCount = 0;
-            this.initQuestions(_questions);
             this.changeCurrentQuestion();
         }
 
@@ -43,15 +42,8 @@ namespace E09 {
             return questionData;
         }
 
-        private changeCurrentQuestion(): void {
-            let randomIndex: number;
-            do
-                randomIndex = Math.floor(Math.random() * this.questions.length);
-            while (randomIndex === this.questionIndex);
-            this.questionIndex = randomIndex;
-        }
-
-        private initQuestions(_questionSet: Array<QuestionData>): void {
+        public initQuestions(_questionSet: Array<QuestionData>): void {
+            this.questions = new Array<Question>();
             for (let i: number = 0; i < _questionSet.length; i++) {
                 switch (_questionSet[i].type) {
                     case "MultipleChoiceQuestion":
@@ -69,5 +61,14 @@ namespace E09 {
                 }
             }
         }
+
+        private changeCurrentQuestion(): void {
+            let randomIndex: number;
+            do
+                randomIndex = Math.floor(Math.random() * this.questions.length);
+            while (randomIndex === this.questionIndex);
+            this.questionIndex = randomIndex;
+        }
+
     }
 }

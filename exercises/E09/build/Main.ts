@@ -26,7 +26,7 @@ namespace E09 {
                 case "A": await answerQuestion(quiz); break;
                 case "B": await addQuestion(quiz); break;
                 case "C": await clearOutput(); break;
-                case "L": await loadQuestions(); break;
+                case "L": await loadQuestions(quiz); break;
                 case "S": await saveQuestions(quiz);
             }
         }
@@ -136,8 +136,26 @@ namespace E09 {
             htmlOutput.lastChild.remove();
     }
 
-    async function loadQuestions(): Promise<void> {
-        log("LOAD QUESTIONS");
+    async function loadQuestions(_quiz: Quiz): Promise<void> {
+        const file: File = await getFile();
+        if (file) {
+            log("Loading from file...");
+            if (file.type === "application/json") {
+                const text: string = await file.text();
+                try {
+                    const json: Array<QuestionData> = JSON.parse(text);
+                    _quiz.initQuestions(json);
+                } catch (e) {
+                    log("Could not parse JSON!");
+                }
+            }
+            else {
+                log("Wrong file type! File type needs to be .json.");
+            }
+        }
+        else {
+            log("Loading aborted.\n");
+        }
     }
 
     async function saveQuestions(_quiz: Quiz): Promise<void> {
@@ -156,9 +174,28 @@ namespace E09 {
         return _input.trim().toUpperCase();
     }
 
+    function getFile(): Promise<File> {
+        const htmlFile: HTMLInputElement = document.createElement("input");
+        htmlFile.accept = ".json";
+        htmlFile.type = "file";
+        htmlFile.classList.add("file");
+        htmlOutput.appendChild(htmlFile);
+        log("Press enter to continue.");
+        return new Promise(function (resolve: (file: File) => void): void {
+            const keydownEvent: EventListener = (event: Event) => {
+                if ((event as KeyboardEvent).key === "Enter") {
+                    htmlFile.disabled = true;
+                    htmlInput.removeEventListener("keydown", keydownEvent);
+                    resolve(htmlFile.files[0]);
+                }
+            };
+            htmlInput.addEventListener("keydown", keydownEvent);
+        });
+    }
+
     function getInput(): Promise<string> {
         htmlInput.focus();
-        return new Promise(function (resolve: FunctionStringCallback): void {
+        return new Promise(function (resolve: (value: string) => void): void {
             const keydownEvent: EventListener = (event: Event) => {
                 if ((event as KeyboardEvent).key === "Enter") {
                     const value: string = htmlInput.value;
@@ -205,18 +242,14 @@ namespace E09 {
         document.body.appendChild(htmlInputWrapper);
 
         htmlInput.type = "text";
-        addEventListener("click", inputFocus);
-        function inputFocus(): void {
-            htmlInput.focus();
-        }
+        const inputFocus: EventListener = () => htmlInput.focus();
         htmlInputWrapper.appendChild(htmlInput);
+        addEventListener("click", inputFocus);
 
         const htmlMode: HTMLDivElement = document.createElement("div");
         htmlMode.classList.add("mode");
+        const changeMode: EventListener = () => document.body.classList.toggle("dark");
         htmlMode.addEventListener("click", changeMode);
-        function changeMode(): void {
-            document.body.classList.toggle("dark");
-        }
         document.body.appendChild(htmlMode);
     }
 }

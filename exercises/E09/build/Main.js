@@ -24,7 +24,7 @@ var E09;
                     await clearOutput();
                     break;
                 case "L":
-                    await loadQuestions();
+                    await loadQuestions(quiz);
                     break;
                 case "S": await saveQuestions(quiz);
             }
@@ -120,8 +120,27 @@ var E09;
         while (htmlOutput.firstChild)
             htmlOutput.lastChild.remove();
     }
-    async function loadQuestions() {
-        log("LOAD QUESTIONS");
+    async function loadQuestions(_quiz) {
+        const file = await getFile();
+        if (file) {
+            log("Loading from file...");
+            if (file.type === "application/json") {
+                const text = await file.text();
+                try {
+                    const json = JSON.parse(text);
+                    _quiz.initQuestions(json);
+                }
+                catch (e) {
+                    log("Could not parse JSON!");
+                }
+            }
+            else {
+                log("Wrong file type! File type needs to be .json.");
+            }
+        }
+        else {
+            log("Loading aborted.\n");
+        }
     }
     async function saveQuestions(_quiz) {
         const questionString = JSON.stringify(_quiz.json());
@@ -135,6 +154,24 @@ var E09;
     }
     function prepareInput(_input) {
         return _input.trim().toUpperCase();
+    }
+    function getFile() {
+        const htmlFile = document.createElement("input");
+        htmlFile.accept = ".json";
+        htmlFile.type = "file";
+        htmlFile.classList.add("file");
+        htmlOutput.appendChild(htmlFile);
+        log("Press enter to continue.");
+        return new Promise(function (resolve) {
+            const keydownEvent = (event) => {
+                if (event.key === "Enter") {
+                    htmlFile.disabled = true;
+                    htmlInput.removeEventListener("keydown", keydownEvent);
+                    resolve(htmlFile.files[0]);
+                }
+            };
+            htmlInput.addEventListener("keydown", keydownEvent);
+        });
     }
     function getInput() {
         htmlInput.focus();
@@ -181,17 +218,13 @@ var E09;
         htmlInputWrapper.classList.add("input", "padding");
         document.body.appendChild(htmlInputWrapper);
         htmlInput.type = "text";
-        addEventListener("click", inputFocus);
-        function inputFocus() {
-            htmlInput.focus();
-        }
+        const inputFocus = () => htmlInput.focus();
         htmlInputWrapper.appendChild(htmlInput);
+        addEventListener("click", inputFocus);
         const htmlMode = document.createElement("div");
         htmlMode.classList.add("mode");
+        const changeMode = () => document.body.classList.toggle("dark");
         htmlMode.addEventListener("click", changeMode);
-        function changeMode() {
-            document.body.classList.toggle("dark");
-        }
         document.body.appendChild(htmlMode);
     }
 })(E09 || (E09 = {}));

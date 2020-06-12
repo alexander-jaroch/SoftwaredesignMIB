@@ -3,11 +3,10 @@ var E09;
 (function (E09) {
     class Quiz {
         constructor(_questions) {
-            this.questions = new Array();
+            this.initQuestions(_questions);
             this.questionIndex = -1;
             this.answerCount = 0;
             this.correctCount = 0;
-            this.initQuestions(_questions);
             this.changeCurrentQuestion();
         }
         get currentQuestion() {
@@ -34,14 +33,8 @@ var E09;
             }
             return questionData;
         }
-        changeCurrentQuestion() {
-            let randomIndex;
-            do
-                randomIndex = Math.floor(Math.random() * this.questions.length);
-            while (randomIndex === this.questionIndex);
-            this.questionIndex = randomIndex;
-        }
         initQuestions(_questionSet) {
+            this.questions = new Array();
             for (let i = 0; i < _questionSet.length; i++) {
                 switch (_questionSet[i].type) {
                     case "MultipleChoiceQuestion":
@@ -58,6 +51,13 @@ var E09;
                         break;
                 }
             }
+        }
+        changeCurrentQuestion() {
+            let randomIndex;
+            do
+                randomIndex = Math.floor(Math.random() * this.questions.length);
+            while (randomIndex === this.questionIndex);
+            this.questionIndex = randomIndex;
         }
     }
     E09.Quiz = Quiz;
