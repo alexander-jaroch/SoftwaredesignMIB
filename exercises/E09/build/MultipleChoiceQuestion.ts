@@ -12,7 +12,7 @@ namespace E09 {
         }
 
         public static parse(_json: MultipleChoiceQuestionData): MultipleChoiceQuestion {
-            return new MultipleChoiceQuestion(_json.text, _json.answers.map((x) => Answer.parse(x)));
+            return new MultipleChoiceQuestion(_json.text, _json.answers.map(x => Answer.parse(x)));
         }
 
         public toString(): string {
@@ -44,7 +44,7 @@ namespace E09 {
             return {
                 type: "MultipleChoiceQuestion",
                 text: this.text,
-                answers: this.answers.map((x) => x.json())
+                answers: this.answers.map(x => x.json())
             };
         }
     }

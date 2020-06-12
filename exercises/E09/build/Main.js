@@ -1,110 +1,198 @@
 "use strict";
 var E09;
 (function (E09) {
-    // output display
-    const outputDiv = document.createElement("div");
-    outputDiv.classList.add("padding");
-    document.body.appendChild(outputDiv);
-    // input line
-    const inputDiv = document.createElement("div");
-    inputDiv.classList.add("input", "padding");
-    document.body.appendChild(inputDiv);
-    const inputElt = document.createElement("input");
-    inputElt.type = "text";
-    inputDiv.appendChild(inputElt);
-    // dark mode button
-    const mode = document.createElement("div");
-    mode.classList.add("mode");
-    mode.addEventListener("click", changeMode);
-    function changeMode() {
-        document.body.classList.toggle("dark");
-    }
-    document.body.appendChild(mode);
-    // ???
-    addEventListener("click", () => { inputElt.focus(); });
+    const htmlOutput = document.createElement("div");
+    const htmlInput = document.createElement("input");
+    initConsole();
     Main();
     // Main
     async function Main() {
-        const quiz = new E09.Quiz(await (await fetch("DefaultQuestions.json")).json());
+        const questionData = await (await fetch("DefaultQuestions.json")).json();
+        const quiz = new E09.Quiz(questionData);
         let input;
         do {
-            printLn("What do you want to do?\n[ A ] answer a question\n[ADD] add a question\n[SVQ] save questions\n[CLC] clear console\n[ Q ] quit quiz");
-            input = await getInput();
-            switch (prepareInput(input)) {
-                // answer a question
+            log("What do you want to do?\n", "[A] answer a question\n", "[B] add a question\n", "[C] clear console\n", "[L] load questions\n", "[S] save questions\n", "[Q] quit quiz");
+            input = prepareInput(await getInput());
+            switch (input) {
                 case "A":
-                    printLn(quiz.currentQuestion.toString());
-                    input = await getInput();
-                    const isRight = quiz.answerCurrentQuestion(input);
-                    if (isRight)
-                        printLn("You're right!");
-                    else
-                        printLn("You're wrong!");
-                    printLn(quiz.score + "\n");
+                    await answerQuestion(quiz);
                     break;
-                // add a question
-                case "ADD":
+                case "B":
+                    await addQuestion(quiz);
                     break;
-                // save questions
-                case "SVQ":
-                    const questionString = JSON.stringify(quiz);
-                    const questionBlob = new Blob([questionString], { type: "application/json" });
-                    printLn("Filename: ");
-                    input = await getInput();
-                    print("File ready... ");
-                    printDl(URL.createObjectURL(questionBlob), input);
-                    printLn(" (" + questionBlob.size + " Bytes)\n");
+                case "C":
+                    await clearOutput();
                     break;
-                case "CLC":
-                    outputDiv.innerHTML = "";
+                case "L":
+                    await loadQuestions();
+                    break;
+                case "S": await saveQuestions(quiz);
             }
-        } while (!["Q", "QUIT", "EXIT"].includes(prepareInput(input)));
-        inputElt.disabled = true;
-        inputElt.value = "Quiz ended.";
+        } while (!["Q", "QUIT", "EXIT"].includes(input));
+        htmlInput.disabled = true;
+        htmlInput.value = "Quiz ended.";
     }
-    // prepares input for switch cases
+    async function answerQuestion(_quiz) {
+        log(_quiz.currentQuestion.toString());
+        const input = await getInput();
+        const isRight = _quiz.answerCurrentQuestion(input);
+        if (isRight)
+            log("You're right!");
+        else
+            log("You're wrong!");
+        log(_quiz.score, "\n");
+    }
+    async function addQuestion(_quiz) {
+        log("What kind of question do you want to add?\n", "[M] Multiple Choice Question\n", "[Y] True or False Question\n", "[G] Guess Question\n", "[T] Text Question\n", "[Q] Go Back");
+        const input = prepareInput(await getInput());
+        switch (input) {
+            case "M":
+                await addMultipleChoiceQuestion(_quiz);
+                break;
+            case "Y":
+                await addTrueFalseQuestion(_quiz);
+                break;
+            case "G":
+                await addGuessQuestion(_quiz);
+                break;
+            case "T":
+                await addTextQuestion(_quiz);
+                break;
+            case "Q":
+                log("No question added.\n");
+                break;
+            default:
+                log(`Failed to add a question of type "${input}"\n`);
+        }
+    }
+    async function addMultipleChoiceQuestion(_quiz) {
+        log("Please enter your question.");
+        const questionText = prepareText(await getInput());
+        const answers = new Array();
+        let answerText;
+        do {
+            log("Enter an answer.");
+            answerText = prepareText(await getInput());
+            if (answerText !== "") {
+                log("Is this answer correct?\n", "[Y] Yes\n", "[N] No");
+                let isRight;
+                do
+                    isRight = prepareInput(await getInput());
+                while (!["Y", "N"].includes(isRight));
+                answers.push(new E09.Answer(answerText, isRight === "Y"));
+            }
+        } while (answers.length < 2 && answerText === "" || answers.length < 6 && answerText !== "");
+        _quiz.addQuestion(new E09.MultipleChoiceQuestion(questionText, answers));
+    }
+    async function addTrueFalseQuestion(_quiz) {
+        log("Please enter your statement.");
+        const questionText = prepareText(await getInput());
+        log("Is this statement true?\n", "[Y] Yes\n", "[N] No");
+        let isRight;
+        do
+            isRight = prepareInput(await getInput());
+        while (!["Y", "N"].includes(isRight));
+        _quiz.addQuestion(new E09.TrueFalseQuestion(questionText, isRight === "Y"));
+    }
+    async function addGuessQuestion(_quiz) {
+        log("Please enter your question.");
+        const questionText = prepareText(await getInput());
+        log("Please enter the correct value.");
+        let value;
+        do
+            value = Number.parseFloat(await getInput());
+        while (Number.isNaN(value));
+        log("Please enter a tolerance value.");
+        let tolerance;
+        do
+            tolerance = Number.parseFloat(await getInput());
+        while (Number.isNaN(tolerance));
+        _quiz.addQuestion(new E09.GuessQuestion(questionText, value, tolerance));
+    }
+    async function addTextQuestion(_quiz) {
+        log("Please enter your question.");
+        const questionText = prepareText(await getInput());
+        log("Please type in the correct answer.");
+        const answerText = prepareText(await getInput());
+        _quiz.addQuestion(new E09.TextQuestion(questionText, answerText));
+    }
+    async function clearOutput() {
+        while (htmlOutput.firstChild)
+            htmlOutput.lastChild.remove();
+    }
+    async function loadQuestions() {
+        log("LOAD QUESTIONS");
+    }
+    async function saveQuestions(_quiz) {
+        const questionString = JSON.stringify(_quiz.json());
+        const questionBlob = new Blob([questionString], { type: "application/json" });
+        log("Please enter a filename.");
+        const filename = await getInput();
+        log("File ready...", `download(${URL.createObjectURL(questionBlob)}, ${filename}.json)`, `(${questionBlob.size} Bytes)\n`);
+    }
+    function prepareText(_text) {
+        return _text.trim().replace(/\s+/g, " ");
+    }
     function prepareInput(_input) {
         return _input.trim().toUpperCase();
     }
-    // waits for user input
     function getInput() {
-        inputElt.focus();
+        htmlInput.focus();
         return new Promise(function (resolve) {
             const keydownEvent = (event) => {
                 if (event.key === "Enter") {
-                    const value = inputElt.value;
-                    inputElt.value = "";
-                    inputElt.removeEventListener("keydown", keydownEvent);
-                    printLn("> " + value);
-                    inputElt.scrollIntoView();
+                    const value = htmlInput.value;
+                    htmlInput.value = "";
+                    htmlInput.removeEventListener("keydown", keydownEvent);
+                    log("> " + value);
+                    htmlInput.scrollIntoView();
                     resolve(value);
                 }
             };
-            inputElt.addEventListener("keydown", keydownEvent);
+            htmlInput.addEventListener("keydown", keydownEvent);
         });
     }
-    // prints a line on custom console
-    function printLn(_text = "") {
-        print(_text);
-        outputDiv.appendChild(document.createElement("br"));
-    }
-    // prints on custom console
-    function print(_text) {
-        const textParts = _text.split("\n");
-        for (let i = 0; i < textParts.length; i++) {
-            outputDiv.appendChild(new Text(textParts[i]));
-            if (i < textParts.length - 1)
-                outputDiv.appendChild(document.createElement("br"));
+    function log(...args) {
+        for (let i = 0; i < args.length; i++) {
+            const lines = args[i].split("\n");
+            for (let k = 0; k < lines.length; k++) {
+                const matches = /^download\((.*?),\s?(.*)\)$/.exec(lines[k]);
+                if (matches) {
+                    const htmlAnchor = document.createElement("a");
+                    htmlAnchor.href = matches[1];
+                    htmlAnchor.download = matches[2];
+                    htmlAnchor.appendChild(new Text(matches[2]));
+                    htmlOutput.appendChild(htmlAnchor);
+                }
+                else
+                    htmlOutput.appendChild(new Text(lines[k]));
+                if (k < lines.length - 1)
+                    htmlOutput.appendChild(document.createElement("br"));
+            }
+            if (i < args.length - 1)
+                htmlOutput.appendChild(new Text(" "));
         }
+        htmlOutput.appendChild(document.createElement("br"));
     }
-    // prints a download url
-    function printDl(_url, _filename) {
-        const download = document.createElement("a");
-        _filename += ".json";
-        download.href = _url;
-        download.download = _filename;
-        download.appendChild(new Text(_filename));
-        outputDiv.appendChild(download);
+    function initConsole() {
+        htmlOutput.classList.add("padding");
+        document.body.appendChild(htmlOutput);
+        const htmlInputWrapper = document.createElement("div");
+        htmlInputWrapper.classList.add("input", "padding");
+        document.body.appendChild(htmlInputWrapper);
+        htmlInput.type = "text";
+        addEventListener("click", inputFocus);
+        function inputFocus() {
+            htmlInput.focus();
+        }
+        htmlInputWrapper.appendChild(htmlInput);
+        const htmlMode = document.createElement("div");
+        htmlMode.classList.add("mode");
+        htmlMode.addEventListener("click", changeMode);
+        function changeMode() {
+            document.body.classList.toggle("dark");
+        }
+        document.body.appendChild(htmlMode);
     }
 })(E09 || (E09 = {}));
 //# sourceMappingURL=Main.js.map

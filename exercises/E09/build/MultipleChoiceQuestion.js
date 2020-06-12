@@ -7,7 +7,7 @@ var E09;
             this.answers = _answers;
         }
         static parse(_json) {
-            return new MultipleChoiceQuestion(_json.text, _json.answers.map((x) => E09.Answer.parse(x)));
+            return new MultipleChoiceQuestion(_json.text, _json.answers.map(x => E09.Answer.parse(x)));
         }
         toString() {
             const letterSet = ["A", "B", "C", "D", "E", "F"];
@@ -36,7 +36,7 @@ var E09;
             return {
                 type: "MultipleChoiceQuestion",
                 text: this.text,
-                answers: this.answers.map((x) => x.json())
+                answers: this.answers.map(x => x.json())
             };
         }
     }
