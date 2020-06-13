@@ -62,5 +62,29 @@
         "type": "TextQuestion",
         "text": "Who is the President of the United States?",
         "answer": "Donald Trump"
+    },
+    {
+        "type": "MultipleChoiceQuestion",
+        "text": "What is the first derivation of p(t) = (1 - t)³p0 + (1 - t)²p1 + (1 - t)p2 + t³p3?",
+        "answers": [
+            {
+                "text": "p'(t) = 3(1 - t)²(p1 - p0) + 6t(1 - t)(p2 - p1) + 3t²(p3 - p2)",
+                "isRight": true
+            },
+            {
+                "text": "p'(t) = 3(1 - t)²(p1 - p0) + 6(1 - t)(p2 - p1) + 3t²(p3 - p2)",
+                "isRight": false
+            },
+            {
+                "text": "p'(t) = 3(1 - t)²p1 + 6t(1 - t)p2 + 3t²p3",
+                "isRight": false
+            }
+        ]
+    },
+    {
+        "type": "GuessQuestion",
+        "text": "What is the average surface temperature (K) of our sun?",
+        "answer": 5778,
+        "tolerance": 22
     }
 ]
