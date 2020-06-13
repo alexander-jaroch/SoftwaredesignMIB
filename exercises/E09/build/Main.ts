@@ -15,7 +15,8 @@ namespace E09 {
                 "What do you want to do?\n",
                 "[A] answer a question\n",
                 "[B] add a question\n",
-                "[C] clear console\n",
+                "[C] clear screen\n",
+                "[H] help\n",
                 "[L] load questions\n",
                 "[S] save questions\n",
                 "[Q] quit quiz"
@@ -26,6 +27,7 @@ namespace E09 {
                 case "A": await answerQuestion(quiz); break;
                 case "B": await addQuestion(quiz); break;
                 case "C": await clearOutput(); break;
+                case "H": await help(); break;
                 case "L": await loadQuestions(quiz); break;
                 case "S": await saveQuestions(quiz);
             }
@@ -134,6 +136,16 @@ namespace E09 {
     async function clearOutput(): Promise<void> {
         while (htmlOutput.firstChild)
             htmlOutput.lastChild.remove();
+    }
+
+    async function help(): Promise<void> {
+        log(
+            "There are four types of questions:\n",
+            "- Multiple Choice: You have to choose the right answers to a question from a set of answers.\n",
+            "- True False: You have to decide wether a statement is true or not.\n",
+            "- Guess: You have to guess a number representing the answer to a question.\n",
+            "- Text: You have to type in the answer to a question.\n"
+        );
     }
 
     async function loadQuestions(_quiz: Quiz): Promise<void> {

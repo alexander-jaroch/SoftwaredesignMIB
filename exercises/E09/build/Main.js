@@ -11,7 +11,7 @@ var E09;
         const quiz = new E09.Quiz(questionData);
         let input;
         do {
-            log("What do you want to do?\n", "[A] answer a question\n", "[B] add a question\n", "[C] clear console\n", "[L] load questions\n", "[S] save questions\n", "[Q] quit quiz");
+            log("What do you want to do?\n", "[A] answer a question\n", "[B] add a question\n", "[C] clear screen\n", "[H] help\n", "[L] load questions\n", "[S] save questions\n", "[Q] quit quiz");
             input = prepareInput(await getInput());
             switch (input) {
                 case "A":
@@ -22,6 +22,9 @@ var E09;
                     break;
                 case "C":
                     await clearOutput();
+                    break;
+                case "H":
+                    await help();
                     break;
                 case "L":
                     await loadQuestions(quiz);
@@ -119,6 +122,9 @@ var E09;
     async function clearOutput() {
         while (htmlOutput.firstChild)
             htmlOutput.lastChild.remove();
+    }
+    async function help() {
+        log("There are four types of questions:\n", "- Multiple Choice: You have to choose the right answers to a question from a set of answers.\n", "- True False: You have to decide wether a statement is true or not.\n", "- Guess: You have to guess a number representing the answer to a question.\n", "- Text: You have to type in the answer to a question.\n");
     }
     async function loadQuestions(_quiz) {
         const file = await getFile();
