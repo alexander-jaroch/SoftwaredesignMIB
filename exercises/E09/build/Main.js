@@ -21,10 +21,10 @@ var E09;
                     await addQuestion(quiz);
                     break;
                 case "C":
-                    await clearOutput();
+                    clearOutput();
                     break;
                 case "H":
-                    await help();
+                    help();
                     break;
                 case "L":
                     await loadQuestions(quiz);
@@ -119,11 +119,11 @@ var E09;
         const answerText = prepareText(await getInput());
         _quiz.addQuestion(new E09.TextQuestion(questionText, answerText));
     }
-    async function clearOutput() {
+    function clearOutput() {
         while (htmlOutput.firstChild)
             htmlOutput.lastChild.remove();
     }
-    async function help() {
+    function help() {
         log("There are four types of questions:\n", "- Multiple Choice: You have to choose the right answers to a question from a set of answers.\n", "- True False: You have to decide wether a statement is true or not.\n", "- Guess: You have to guess a number representing the answer to a question.\n", "- Text: You have to type in the answer to a question.\n");
     }
     async function loadQuestions(_quiz) {

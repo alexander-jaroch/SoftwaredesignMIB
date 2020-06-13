@@ -26,8 +26,8 @@ namespace E09 {
             switch (input) {
                 case "A": await answerQuestion(quiz); break;
                 case "B": await addQuestion(quiz); break;
-                case "C": await clearOutput(); break;
-                case "H": await help(); break;
+                case "C": clearOutput(); break;
+                case "H": help(); break;
                 case "L": await loadQuestions(quiz); break;
                 case "S": await saveQuestions(quiz);
             }
@@ -133,12 +133,12 @@ namespace E09 {
         _quiz.addQuestion(new TextQuestion(questionText, answerText));
     }
 
-    async function clearOutput(): Promise<void> {
+    function clearOutput(): void {
         while (htmlOutput.firstChild)
             htmlOutput.lastChild.remove();
     }
 
-    async function help(): Promise<void> {
+    function help(): void {
         log(
             "There are four types of questions:\n",
             "- Multiple Choice: You have to choose the right answers to a question from a set of answers.\n",
