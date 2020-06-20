@@ -19,25 +19,40 @@ var E11;
                 }
             }
         }
-        printTree() {
+        remove() {
+            if (this.parent)
+                this.parent.removeChild(this);
+        }
+        search(_pattern) {
+            const result = new Array();
+            this.searchRecursive(_pattern, result);
+            return result;
+        }
+        stringify() {
+            return this.stringifyRecursive(0);
+        }
+        log() {
             console.group(this.value);
-            for (const child of this.children) {
-                child.printTree();
-            }
+            for (const child of this.children)
+                child.log();
             console.groupEnd();
         }
-        getString(_level = 0) {
-            let treeString = this.prefix(_level) + this.value.toString() + "\n";
-            for (const child of this.children) {
-                treeString += child.getString(_level + 1);
-            }
+        searchRecursive(_pattern, _result) {
+            if (_pattern(this.value))
+                _result.push(this);
+            for (const child of this.children)
+                child.searchRecursive(_pattern, _result);
+        }
+        stringifyRecursive(_depth) {
+            let treeString = this.prefix(_depth) + this.value.toString() + "\n";
+            for (const child of this.children)
+                treeString += child.stringifyRecursive(_depth + 1);
             return treeString;
         }
-        prefix(_level) {
+        prefix(_depth) {
             let pre = "";
-            do
+            while (_depth-- > 0)
                 pre += "*";
-            while (--_level > 0);
             return pre;
         }
     }

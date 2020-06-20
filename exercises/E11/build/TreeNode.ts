@@ -24,27 +24,46 @@ namespace E11 {
             }
         }
 
-        public printTree(): void {
+        public remove(): void {
+            if (this.parent)
+                this.parent.removeChild(this);
+        }
+
+        public search(_pattern: (_value: T) => boolean): Array<TreeNode<T>> {
+            const result: Array<TreeNode<T>> = new Array<TreeNode<T>>();
+            this.searchRecursive(_pattern, result);
+            return result;
+        }
+
+        public stringify(): string {
+            return this.stringifyRecursive(0);
+        }
+
+        public log(): void {
             console.group(this.value);
-            for (const child of this.children) {
-                child.printTree();
-            }
+            for (const child of this.children)
+                child.log();
             console.groupEnd();
         }
 
-        public getString(_level: number = 0): string {
-            let treeString: string = this.prefix(_level) + this.value.toString() + "\n";
-            for (const child of this.children) {
-                treeString += child.getString(_level + 1);
-            }
+        private searchRecursive(_pattern: (_value: T) => boolean, _result: Array<TreeNode<T>>): void {
+            if (_pattern(this.value))
+                _result.push(this);
+            for (const child of this.children)
+                child.searchRecursive(_pattern, _result);
+        }
+
+        private stringifyRecursive(_depth: number): string {
+            let treeString: string = this.prefix(_depth) + this.value.toString() + "\n";
+            for (const child of this.children)
+                treeString += child.stringifyRecursive(_depth + 1);
             return treeString;
         }
 
-        private prefix(_level: number): string {
+        private prefix(_depth: number): string {
             let pre: string = "";
-            do
+            while (_depth-- > 0)
                 pre += "*";
-            while (--_level > 0);
             return pre;
         }
     }

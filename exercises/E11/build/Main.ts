@@ -16,6 +16,9 @@ namespace E11 {
     child1.removeChild(grand12);
     const grand111: TreeNode<string> = tree.createNode("grand111");
     grand11.appendChild(grand111);
-    root.printTree();
-    //console.log(root.getString());
+    console.log(root.stringify());
+    console.log(root.search(x => x.includes("grand")));
+    child2.remove();
+    console.log(root.stringify());
+    //root.log();
 }
