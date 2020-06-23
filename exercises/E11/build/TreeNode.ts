@@ -3,16 +3,21 @@ namespace E11 {
         public value: T;
         private parent: TreeNode<T>;
         private children: Array<TreeNode<T>>;
+        private tree: Tree<T>;
 
-        public constructor(_value: T) {
+        public constructor(_value: T, _tree: Tree<T>) {
             this.value = _value;
             this.parent = null;
             this.children = new Array<TreeNode<T>>();
+            this.tree = _tree;
         }
 
         public appendChild(_child: TreeNode<T>): void {
             _child.parent = this;
             this.children.push(_child);
+            for (const observer of this.tree.appendObservers) {
+                observer(this, _child);
+            }
         }
 
         public removeChild(_child: TreeNode<T>): void {
@@ -29,21 +34,17 @@ namespace E11 {
                 this.parent.removeChild(this);
         }
 
+        public printTree(_depth: number = 0): string {
+            let treeString: string = this.prefix(_depth) + this.value.toString() + "\n";
+            for (const child of this.children)
+                treeString += child.printTree(_depth + 1);
+            return treeString;
+        }
+
         public search(_pattern: (_value: T) => boolean): Array<TreeNode<T>> {
             const result: Array<TreeNode<T>> = new Array<TreeNode<T>>();
             this.searchRecursive(_pattern, result);
             return result;
-        }
-
-        public stringify(): string {
-            return this.stringifyRecursive(0);
-        }
-
-        public log(): void {
-            console.group(this.value);
-            for (const child of this.children)
-                child.log();
-            console.groupEnd();
         }
 
         private searchRecursive(_pattern: (_value: T) => boolean, _result: Array<TreeNode<T>>): void {
@@ -51,13 +52,6 @@ namespace E11 {
                 _result.push(this);
             for (const child of this.children)
                 child.searchRecursive(_pattern, _result);
-        }
-
-        private stringifyRecursive(_depth: number): string {
-            let treeString: string = this.prefix(_depth) + this.value.toString() + "\n";
-            for (const child of this.children)
-                treeString += child.stringifyRecursive(_depth + 1);
-            return treeString;
         }
 
         private prefix(_depth: number): string {

@@ -2,14 +2,18 @@
 var E11;
 (function (E11) {
     class TreeNode {
-        constructor(_value) {
+        constructor(_value, _tree) {
             this.value = _value;
             this.parent = null;
             this.children = new Array();
+            this.tree = _tree;
         }
         appendChild(_child) {
             _child.parent = this;
             this.children.push(_child);
+            for (const observer of this.tree.appendObservers) {
+                observer(this, _child);
+            }
         }
         removeChild(_child) {
             for (let i = 0; i < this.children.length; i++) {
@@ -23,31 +27,22 @@ var E11;
             if (this.parent)
                 this.parent.removeChild(this);
         }
+        printTree(_depth = 0) {
+            let treeString = this.prefix(_depth) + this.value.toString() + "\n";
+            for (const child of this.children)
+                treeString += child.printTree(_depth + 1);
+            return treeString;
+        }
         search(_pattern) {
             const result = new Array();
             this.searchRecursive(_pattern, result);
             return result;
-        }
-        stringify() {
-            return this.stringifyRecursive(0);
-        }
-        log() {
-            console.group(this.value);
-            for (const child of this.children)
-                child.log();
-            console.groupEnd();
         }
         searchRecursive(_pattern, _result) {
             if (_pattern(this.value))
                 _result.push(this);
             for (const child of this.children)
                 child.searchRecursive(_pattern, _result);
-        }
-        stringifyRecursive(_depth) {
-            let treeString = this.prefix(_depth) + this.value.toString() + "\n";
-            for (const child of this.children)
-                treeString += child.stringifyRecursive(_depth + 1);
-            return treeString;
         }
         prefix(_depth) {
             let pre = "";

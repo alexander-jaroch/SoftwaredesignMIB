@@ -16,12 +16,21 @@ var E11;
     const grand21 = tree.createNode("grand21");
     child2.appendChild(grand21);
     child1.removeChild(grand12);
+    tree.addAppendObserver(noticeOnAppend);
+    function noticeOnAppend(_parent, _child) {
+        console.log("appended", _child, "to", _parent);
+    }
     const grand111 = tree.createNode("grand111");
     grand11.appendChild(grand111);
-    console.log(root.stringify());
-    console.log(root.search(x => x.includes("grand")));
+    console.log(root.printTree());
+    //console.log(root.search(x => x.includes("grand")));
+    const results = root.search(includesGrand);
+    console.log(results);
+    function includesGrand(_value) {
+        return _value.includes("grand");
+    }
     child2.remove();
-    console.log(root.stringify());
+    console.log(root.printTree());
     //root.log();
 })(E11 || (E11 = {}));
 //# sourceMappingURL=Main.js.map
