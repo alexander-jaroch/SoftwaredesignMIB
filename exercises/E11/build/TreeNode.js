@@ -8,12 +8,16 @@ var E11;
             this.children = new Array();
             this.tree = _tree;
         }
+        *[Symbol.iterator]() {
+            yield this;
+            for (const child of this.children) {
+                yield* child;
+            }
+        }
         appendChild(_child) {
             _child.parent = this;
             this.children.push(_child);
-            for (const observer of this.tree.appendObservers) {
-                observer(this, _child);
-            }
+            this.tree.notifyObservers(this);
         }
         removeChild(_child) {
             for (let i = 0; i < this.children.length; i++) {

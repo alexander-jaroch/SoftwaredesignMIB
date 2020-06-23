@@ -1,7 +1,7 @@
 namespace E11 {
     export class TreeNode<T> {
         public value: T;
-        private parent: TreeNode<T>;
+        public parent: TreeNode<T>;
         private children: Array<TreeNode<T>>;
         private tree: Tree<T>;
 
@@ -12,12 +12,17 @@ namespace E11 {
             this.tree = _tree;
         }
 
+        *[Symbol.iterator](): Generator {
+            yield this;
+            for (const child of this.children) {
+                yield* child;
+            }
+        }
+
         public appendChild(_child: TreeNode<T>): void {
             _child.parent = this;
             this.children.push(_child);
-            for (const observer of this.tree.appendObservers) {
-                observer(this, _child);
-            }
+            this.tree.notifyObservers(this);
         }
 
         public removeChild(_child: TreeNode<T>): void {

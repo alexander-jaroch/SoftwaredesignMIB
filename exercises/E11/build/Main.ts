@@ -1,4 +1,16 @@
 namespace E11 {
+    class AppendLog<T> implements TreeObserver<T> {
+        update(_node: TreeNode<T>): void {
+            console.log("appended", _node, "to", _node.parent);
+        }
+    }
+
+    class AppendLog2<T> implements TreeObserver<T> {
+        update(_node: TreeNode<T>): void {
+            console.log(_node.value, "appended");
+        }
+    }
+
     const tree: Tree<string> = new Tree<string>();
     const root: TreeNode<string> = tree.createNode("root");
     const child1: TreeNode<string> = tree.createNode("child1");
@@ -12,30 +24,18 @@ namespace E11 {
     child1.appendChild(grand12);
     child1.appendChild(grand13);
     const grand21: TreeNode<string> = tree.createNode("grand21");
+    tree.registerObserver(new AppendLog2<string>());
     child2.appendChild(grand21);
     child1.removeChild(grand12);
-
-    tree.addAppendObserver(noticeOnAppend);
-    function noticeOnAppend(_parent: TreeNode<string>, _child: TreeNode<string>): void {
-        console.log("appended", _child, "to", _parent);
-    }
-
+    tree.registerObserver(new AppendLog<string>());
     const grand111: TreeNode<string> = tree.createNode("grand111");
     grand11.appendChild(grand111);
     console.log(root.printTree());
-    //console.log(root.search(x => x.includes("grand")));
-
-    const results: Array<TreeNode<string>> = root.search(includesGrand);
-    console.log(results);
-
-    function includesGrand(_value: string): boolean {
-        return _value.includes("grand");
-    }
+    console.log(root.search(x => x.includes("grand")));
 
     child2.remove();
     console.log(root.printTree());
-
-
-
-    //root.log();
+    for (const node of root) {
+        console.log(node);
+    }
 }
