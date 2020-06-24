@@ -30,11 +30,11 @@ namespace E11 {
     tree.registerObserver(new AppendLog<string>());
     const grand111: TreeNode<string> = tree.createNode("grand111");
     grand11.appendChild(grand111);
-    console.log(root.printTree());
+    console.log(root.stringify());
     console.log(root.search(x => x.includes("grand")));
 
     child2.remove();
-    console.log(root.printTree());
+    console.log(root.stringify());
     for (const node of root) {
         console.log(node);
     }

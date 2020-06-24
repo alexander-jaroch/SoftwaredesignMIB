@@ -39,10 +39,10 @@ namespace E11 {
                 this.parent.removeChild(this);
         }
 
-        public printTree(_depth: number = 0): string {
+        public stringify(_depth: number = 0): string {
             let treeString: string = this.prefix(_depth) + this.value.toString() + "\n";
             for (const child of this.children)
-                treeString += child.printTree(_depth + 1);
+                treeString += child.stringify(_depth + 1);
             return treeString;
         }
 
