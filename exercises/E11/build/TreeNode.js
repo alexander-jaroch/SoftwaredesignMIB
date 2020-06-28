@@ -31,10 +31,10 @@ var E11;
             if (this.parent)
                 this.parent.removeChild(this);
         }
-        printTree(_depth = 0) {
+        stringify(_depth = 0) {
             let treeString = this.prefix(_depth) + this.value.toString() + "\n";
             for (const child of this.children)
-                treeString += child.printTree(_depth + 1);
+                treeString += child.stringify(_depth + 1);
             return treeString;
         }
         search(_pattern) {
